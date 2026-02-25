@@ -995,4 +995,82 @@
                     )}
                 </AnimatePresence>
             ); 
-            
+            // Main Render
+            return (
+                <div className="min-h-screen bg-black text-white">
+                    <NotificationContainer />
+                    <PaymentModal />
+                    
+                    {currentView === 'landing' && <LandingPage />}
+                    {currentView === 'dine' && <DineView />}
+                    {currentView === 'vip' && <VIPView />}
+                    {currentView === 'kitchen' && <KitchenView />}
+                    {currentView === 'coffee' && <CoffeeView />}
+                    {currentView === 'bar' && <BarView />}
+                    
+                    {/* Quick Nav Footer */}
+                    {currentView !== 'landing' && (
+                        <motion.div 
+                            initial={{ y: 100 }}
+                            animate={{ y: 0 }}
+                            className="fixed bottom-6 left-1/2 transform -translate-x-1/2 glass-gold rounded-full px-6 py-3 flex gap-6 z-40"
+                        >
+                            <button onClick={() => setCurrentView('landing')} className="hover:text-yellow-500 transition text-xl" title="Home">🏠</button>
+                            <button onClick={() => setCurrentView('dine')} className="hover:text-yellow-500 transition text-xl" title="Dine">🍽️</button>
+                            <button onClick={() => setCurrentView('coffee')} className="hover:text-yellow-500 transition text-xl" title="Coffee">☕</button>
+                            <button onClick={() => setCurrentView('bar')} className="hover:text-yellow-500 transition text-xl" title="Bar">🍸</button>
+                            <button onClick={() => setCurrentView('vip')} className="hover:text-yellow-500 transition text-xl" title="VIP">💎</button>
+                        </motion.div>
+                    )}
+                    
+                    {/* Empire Footer */}
+                    <footer className="bg-black border-t border-yellow-500/20 py-12 px-6">
+                        <div className="max-w-4xl mx-auto text-center">
+                            <div className="text-6xl mb-4">👑</div>
+                            <h3 className="font-serif text-3xl font-bold mb-2 bg-gradient-to-r from-yellow-200 to-yellow-500 bg-clip-text text-transparent">
+                                BaristaBot Pro
+                            </h3>
+                            <p className="font-elegant text-xl text-gray-400 mb-2">Empire State Edition</p>
+                            <p className="text-sm text-gray-600 mb-6">By Dennis Kathurima • Nairobi → Global</p>
+                            
+                            <div className="flex justify-center gap-6 text-sm text-gray-500 mb-8">
+                                <span>☕ Specialty Coffee</span>
+                                <span>•</span>
+                                <span>🍽️ Fine Dining</span>
+                                <span>•</span>
+                                <span>💎 VIP Experience</span>
+                                <span>•</span>
+                                <span>🪙 Web3 Ready</span>
+                            </div>
+                            
+                            <div className="flex justify-center gap-4">
+                                <a href="#" className="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center hover:bg-yellow-500/20 transition">
+                                    <span>📧</span>
+                                </a>
+                                <a href="#" className="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center hover:bg-yellow-500/20 transition">
+                                    <span>🐦</span>
+                                </a>
+                                <a href="#" className="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center hover:bg-yellow-500/20 transition">
+                                    <span>💼</span>
+                                </a>
+                                <a href="#" className="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center hover:bg-yellow-500/20 transition">
+                                    <span>📸</span>
+                                </a>
+                            </div>
+                            
+                            <p className="text-xs text-gray-700 mt-8">
+                                © 2024 Dennis Kathurima. All rights reserved. <br/>
+                                Built with React, Tailwind, Framer Motion & J. Cole on repeat.
+                            </p>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+        
+        // Mount the Empire
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<BaristaBotEmpire />);
+    </script>
+</body>
+</html>
