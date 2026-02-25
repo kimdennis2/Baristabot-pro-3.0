@@ -3,541 +3,473 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BaristaBot Pro | Dennis Kathurima — Empire State Edition</title>
+    <title>BaristaBot Pro | Dennis Kathurima</title>
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- React 18 -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel for JSX -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- Framer Motion -->
     <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
-        :root {
-            --empire-gold: #D4AF37;
-            --empire-black: #0a0a0a;
-            --empire-cream: #F5F5DC;
-            --empire-burgundy: #800020;
-            --nairobi-green: #00A650;
-            --cole-world: #1a1a2e;
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0a0a0a;
+            color: white;
         }
         
-        * { font-family: 'Inter', sans-serif; }
+        .font-serif {
+            font-family: 'Playfair Display', serif;
+        }
         
-        .font-serif { font-family: 'Playfair Display', serif; }
-        .font-elegant { font-family: 'Cormorant Garamond', serif; }
+        .gold-gradient {
+            background: linear-gradient(135deg, #D4AF37 0%, #B8941F 100%);
+        }
         
-        @keyframes empireGlow {
-            0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
-            50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.6); }
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
         }
         
-        @keyframes shimmer {
-            0% { background-position: -1000px 0; }
-            100% { background-position: 1000px 0; }
-        }
-        
-        .empire-glow { animation: empireGlow 3s ease-in-out infinite; }
-        .float-animation { animation: float 4s ease-in-out infinite; }
-        
-        .shimmer-text {
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            background-size: 1000px 100%;
-            animation: shimmer 3s infinite;
-        }
-        
-        .glass-empire {
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-        }
-        
-        .glass-gold {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(212, 175, 55, 0.3);
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
         }
         
         .vip-bronze { background: linear-gradient(135deg, #cd7f32, #8b4513); }
         .vip-silver { background: linear-gradient(135deg, #c0c0c0, #808080); }
-        .vip-gold { background: linear-gradient(135deg, #ffd700, #d4af37); }
+        .vip-gold { background: linear-gradient(135deg, #ffd700, #D4AF37); }
         .vip-platinum { background: linear-gradient(135deg, #e5e4e2, #a0b2c6); }
         .vip-diamond { background: linear-gradient(135deg, #b9f2ff, #00ced1); }
-        
-        .cole-gradient {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-        }
-        
-        .table-available { border-color: #00A650; background: rgba(0, 166, 80, 0.1); }
-        .table-occupied { border-color: #dc2626; background: rgba(220, 38, 38, 0.1); }
-        .table-reserved { border-color: #f59e0b; background: rgba(245, 158, 11, 0.1); }
-        
-        .nft-card {
-            transform-style: preserve-3d;
-            transition: transform 0.6s;
-        }
-        .nft-card:hover { transform: rotateY(180deg); }
-        .nft-front, .nft-back {
-            backface-visibility: hidden;
-            position: absolute;
-            inset: 0;
-        }
-        .nft-back { transform: rotateY(180deg); }
-        
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0a0a0a; }
-        ::-webkit-scrollbar-thumb { background: var(--empire-gold); border-radius: 3px; }
-        
-        .empire-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
     </style>
 </head>
-<body class="bg-black text-white overflow-x-hidden">
+<body>
     <div id="root"></div>
-    
+
     <script type="text/babel">
-        const { useState, useEffect, useRef, useCallback, useMemo } = React;
+        const { useState, useEffect } = React;
         const { motion, AnimatePresence } = window.Motion;
-        
-        const STAFF_HIERARCHY = {
-            executive: [
-                { id: 'dennis', name: 'Dennis Kathurima', role: 'General Manager & Founder', avatar: '👑', tier: 'founder', specialty: 'Vision & Excellence' }
-            ],
-            management: [
-                { id: 'sophia', name: 'Sophia Chen', role: 'Executive Chef', avatar: '👩‍🍳', tier: 'platinum', specialty: 'Fusion Cuisine' },
-                { id: 'marcus', name: 'Marcus Johnson', role: 'Head Sommelier', avatar: '🍷', tier: 'gold', specialty: 'Wine & Spirits' }
-            ],
-            baristas: [
-                { id: 'ian', name: 'Ian Ochieng', role: 'Lead Barista', avatar: '☕', tier: 'gold', specialty: 'Latte Art Champion' },
-                { id: 'dan', name: 'Dan Mwangi', role: 'Barista', avatar: '🎨', tier: 'silver', specialty: 'Cold Brew Master' },
-                { id: 'zara', name: 'Zara Hassan', role: 'Barista', avatar: '🌟', tier: 'silver', specialty: 'Signature Drinks' }
-            ],
-            service: [
-                { id: 'james', name: 'James Kiptoo', role: 'Maître D', avatar: '🎩', tier: 'gold', specialty: 'VIP Service' },
-                { id: 'amina', name: 'Amina Diallo', role: 'Server', avatar: '🍽️', tier: 'bronze', specialty: 'French Service' }
-            ]
-        };
-        
-        const VIP_PROGRAM = {
-            tiers: [
-                { name: 'Bronze', minSpend: 0, discount: 0.05, perks: ['Free WiFi', 'Birthday Coffee'] },
-                { name: 'Silver', minSpend: 5000, discount: 0.10, perks: ['Priority Seating', '10% Off', 'Free Refills'] },
-                { name: 'Gold', minSpend: 15000, discount: 0.15, perks: ['Reserved Parking', '15% Off', 'Exclusive Events'] },
-                { name: 'Platinum', minSpend: 50000, discount: 0.20, perks: ['Personal Concierge', '20% Off', 'Kitchen Tours'] },
-                { name: 'Diamond', minSpend: 100000, discount: 0.25, perks: ['Private Dining', '25% Off', 'Chef\'s Table', 'NFT Membership'] }
-            ]
-        };
-        
-        const EMPIRE_MENU = {
-            coffee: {
-                signature: [
-                    { id: 'empire-espresso', name: 'The Empire Espresso', price: 450, description: 'Triple shot, gold leaf, edible flowers', origin: 'Kenya AA', prepTime: 4, image: '👑' },
-                    { id: 'cole-latte', name: 'Cole World Latte', price: 650, description: 'Caramel, sea salt, J. Cole quote art', origin: 'Ethiopia', prepTime: 6, image: '🎵' },
-                    { id: 'nairobi-cold', name: 'Nairobi Nights Cold Brew', price: 550, description: '24hr brew, nitrogen-charged, smoked', origin: 'Brazil', prepTime: 2, image: '🌃' }
-                ],
-                classics: [
-                    { id: 'cappuccino', name: 'Cappuccino', price: 400, description: 'Traditional Italian', prepTime: 4 },
-                    { id: 'flat-white', name: 'Flat White', price: 450, description: 'Australian style', prepTime: 4 },
-                    { id: 'pour-over', name: 'Pour Over V60', price: 500, description: 'Single origin, hand-crafted', prepTime: 8 }
-                ]
-            },
-            dining: {
-                breakfast: [
-                    { id: 'full-kenyan', name: 'The Full Kenyan', price: 1200, description: 'Eggs, nyama choma, ugali, kachumbari', prepTime: 15, image: '🍳' },
-                    { id: 'truffle-eggs', name: 'Truffle Scrambled Eggs', price: 1800, description: 'Black truffle, caviar, sourdough', prepTime: 12, image: '🥚' },
-                    { id: 'pancakes', name: 'Empire Stack Pancakes', price: 950, description: 'Maple, berries, gold dust', prepTime: 10, image: '🥞' }
-                ],
-                lunch: [
-                    { id: 'wagyu-burger', name: 'Wagyu Beef Burger', price: 2200, description: 'A5 wagyu, brioche, truffle fries', prepTime: 18, image: '🍔' },
-                    { id: 'lobster-roll', name: 'Maine Lobster Roll', price: 2800, description: 'Butter-poached, New England style', prepTime: 15, image: '🦞' },
-                    { id: 'vegan-bowl', name: 'Wellness Bowl', price: 1200, description: 'Quinoa, avocado, tahini, superfoods', prepTime: 10, image: '🥗' }
-                ],
-                dinner: [
-                    { id: 'ribeye', name: 'Dry-Aged Ribeye', price: 4500, description: '45-day aged, bone marrow, red wine', prepTime: 25, image: '🥩' },
-                    { id: 'sea-bass', name: 'Chilean Sea Bass', price: 3800, description: 'Miso glaze, bok choy, ginger', prepTime: 22, image: '🐟' },
-                    { id: 'pasta', name: 'Lobster Linguine', price: 3200, description: 'Maine lobster, cognac cream', prepTime: 20, image: '🍝' }
-                ],
-                desserts: [
-                    { id: 'souffle', name: 'Grand Marnier Soufflé', price: 1200, description: 'Made to order, 20min wait', prepTime: 20, image: '🍮' },
-                    { id: 'tiramisu', name: 'Tiramisu Classico', price: 850, description: 'Mascarpone, espresso, cocoa', prepTime: 5, image: '🍰' },
-                    { id: 'cheesecake', name: 'New York Cheesecake', price: 950, description: 'Strawberry compote, graham crust', prepTime: 5, image: '🗽' }
-                ]
-            },
-            bar: {
-                cocktails: [
-                    { id: 'empire-old', name: 'The Empire Old Fashioned', price: 1200, description: 'Bourbon, gold syrup, angostura', prepTime: 5, image: '🥃' },
-                    { id: 'nairobi-mule', name: 'Nairobi Mule', price: 950, description: 'Vodka, ginger beer, lime, copper mug', prepTime: 3, image: '🍹' },
-                    { id: 'cole-margarita', name: 'Cole World Margarita', price: 1100, description: 'Mezcal, jalapeño, smoked salt', prepTime: 4, image: '🍸' }
-                ],
-                wine: [
-                    { id: 'dom-perignon', name: 'Dom Pérignon 2012', price: 45000, description: 'Champagne, France', image: '🍾' },
-                    { id: 'opus-one', name: 'Opus One 2018', price: 28000, description: 'Napa Valley Cabernet', image: '🍷' },
-                    { id: 'house-red', name: 'House Red', price: 800, description: 'Kenyan Cabernet Sauvignon', image: '🍷' }
-                ]
-            }
-        };
-        
-        const TABLES = Array.from({ length: 20 }, (_, i) => ({
-            id: i + 1,
-            number: `T${String(i + 1).padStart(2, '0')}`,
-            capacity: i < 8 ? 2 : i < 14 ? 4 : i < 18 ? 6 : 8,
-            status: Math.random() > 0.7 ? 'occupied' : Math.random() > 0.5 ? 'reserved' : 'available',
-            zone: i < 6 ? 'Window' : i < 12 ? 'Main' : i < 16 ? 'Garden' : 'VIP Lounge',
-            qrCode: `https://baristabot.pro/table/${i + 1}`
-        }));
-        
-        const COLE_QUOTES = [
-            "No such thing as a life that's better than yours",
-            "Love yours",
-            "The real is back, the ville is back",
-            "Can't cry over spilled milk, gotta cry over steak",
-            "I'm a king, you a pawn, that's the difference"
-          // ==========================================
-        // EMPIRE STATE APP COMPONENT
+
+        // ==========================================
+        // DATA
         // ==========================================
         
-        const BaristaBotEmpire = () => {
-            // Core Navigation
-            const [currentView, setCurrentView] = useState('landing');
-            
-            // User State
-            const [user, setUser] = useState({
-                name: '',
-                phone: '',
-                vipTier: 'Bronze',
-                totalSpent: 0,
-                baristaTokens: 0,
-                nftMembership: null,
-                reservations: []
-            });
-            
-            // Order State
+        const COFFEE_MENU = [
+            { id: 1, name: "Empire Espresso", price: 450, desc: "Triple shot, gold leaf", icon: "☕" },
+            { id: 2, name: "Cole World Latte", price: 650, desc: "Caramel, J. Cole art", icon: "🎵" },
+            { id: 3, name: "Nairobi Cold Brew", price: 550, desc: "24hr nitrogen brew", icon: "🌃" },
+            { id: 4, name: "Kenyan AA Pour Over", price: 500, desc: "Single origin", icon: "🇰🇪" },
+            { id: 5, name: "Flat White", price: 400, desc: "Australian style", icon: "🥛" }
+        ];
+
+        const FOOD_MENU = [
+            { id: 6, name: "Full Kenyan Breakfast", price: 1200, desc: "Eggs, nyama choma, ugali", icon: "🍳" },
+            { id: 7, name: "Wagyu Burger", price: 2200, desc: "A5 wagyu, truffle fries", icon: "🍔" },
+            { id: 8, name: "Dry-Aged Ribeye", price: 4500, desc: "45-day aged", icon: "🥩" },
+            { id: 9, name: "Lobster Linguine", price: 3200, desc: "Maine lobster", icon: "🍝" },
+            { id: 10, name: "NY Cheesecake", price: 950, desc: "Strawberry compote", icon: "🍰" }
+        ];
+
+        const BAR_MENU = [
+            { id: 11, name: "Empire Old Fashioned", price: 1200, desc: "Bourbon, gold syrup", icon: "🥃" },
+            { id: 12, name: "Nairobi Mule", price: 950, desc: "Vodka, ginger beer", icon: "🍹" },
+            { id: 13, name: "Dom Perignon 2012", price: 45000, desc: "Champagne", icon: "🍾" }
+        ];
+
+        const VIP_TIERS = [
+            { name: "Bronze", spend: 0, discount: 5, color: "vip-bronze" },
+            { name: "Silver", spend: 5000, discount: 10, color: "vip-silver" },
+            { name: "Gold", spend: 15000, discount: 15, color: "vip-gold" },
+            { name: "Platinum", spend: 50000, discount: 20, color: "vip-platinum" },
+            { name: "Diamond", spend: 100000, discount: 25, color: "vip-diamond" }
+        ];
+
+        const TABLES = Array.from({ length: 12 }, (_, i) => ({
+            id: i + 1,
+            num: `T${i + 1}`,
+            seats: i < 4 ? 2 : i < 8 ? 4 : 6,
+            status: Math.random() > 0.6 ? "available" : Math.random() > 0.5 ? "occupied" : "reserved"
+        }));
+
+        // ==========================================
+        // MAIN APP
+        // ==========================================
+
+        function App() {
+            const [page, setPage] = useState("home");
             const [cart, setCart] = useState([]);
-            const [currentOrder, setCurrentOrder] = useState(null);
-            const [orders, setOrders] = useState([
-                {
-                    id: 'EMP-001',
-                    customer: 'Dennis K.',
-                    table: 'T05',
-                    items: [
-                        { name: 'The Empire Espresso', quantity: 1, price: 450 },
-                        { name: 'The Full Kenyan', quantity: 1, price: 1200 }
-                    ],
-                    subtotal: 1650,
-                    discount: 82.5,
-                    serviceCharge: 165,
-                    total: 1732.5,
-                    reward: 86,
-                    status: 'ready',
-                    timestamp: new Date(Date.now() - 300000).toISOString(),
-                    paymentMethod: 'mpesa'
-                }
-            ]);
-            
-            // Table State
+            const [user, setUser] = useState({ name: "", phone: "", spent: 0, tokens: 0, tier: "Bronze" });
             const [selectedTable, setSelectedTable] = useState(null);
-            const [reservationTime, setReservationTime] = useState('');
-            
-            // UI State
-            const [notifications, setNotifications] = useState([]);
             const [showPayment, setShowPayment] = useState(false);
-            const [paymentMethod, setPaymentMethod] = useState('mpesa');
-            const [cryptoReward, setCryptoReward] = useState(null);
-            
-            // Random Cole Quote
-            const [coleQuote, setColeQuote] = useState(COLE_QUOTES[0]);
-            
-            useEffect(() => {
-                const interval = setInterval(() => {
-                    setColeQuote(COLE_QUOTES[Math.floor(Math.random() * COLE_QUOTES.length)]);
-                }, 10000);
-                return () => clearInterval(interval);
-            }, []);
-            
-            // Notification System
-            const notify = (message, type = 'info') => {
-                const id = Date.now();
-                setNotifications(prev => [...prev, { id, message, type }]);
-                setTimeout(() => setNotifications(prev => prev.filter(n => n.id !== id)), 4000);
+            const [orders, setOrders] = useState([]);
+            const [notification, setNotification] = useState(null);
+
+            const showNotification = (msg, type = "info") => {
+                setNotification({ msg, type });
+                setTimeout(() => setNotification(null), 3000);
             };
-            
-            // Calculate VIP Tier
-            const calculateTier = (spent) => {
-                for (let i = VIP_PROGRAM.tiers.length - 1; i >= 0; i--) {
-                    if (spent >= VIP_PROGRAM.tiers[i].minSpend) {
-                        return VIP_PROGRAM.tiers[i].name;
-                    }
+
+            const addToCart = (item) => {
+                const existing = cart.find(i => i.id === item.id);
+                if (existing) {
+                    setCart(cart.map(i => i.id === item.id ? { ...i, qty: i.qty + 1 } : i));
+                } else {
+                    setCart([...cart, { ...item, qty: 1 }]);
                 }
-                return 'Bronze';
+                showNotification(`Added ${item.name}`, "success");
             };
-            
-            // Add to Cart
-            const addToCart = (item, category) => {
-                setCart(prev => {
-                    const existing = prev.find(i => i.id === item.id);
-                    if (existing) {
-                        return prev.map(i => i.id === item.id ? {...i, quantity: i.quantity + 1} : i);
+
+            const removeFromCart = (id) => {
+                setCart(cart.filter(i => i.id !== id));
+            };
+
+            const updateQty = (id, delta) => {
+                setCart(cart.map(i => {
+                    if (i.id === id) {
+                        const newQty = i.qty + delta;
+                        return newQty > 0 ? { ...i, qty: newQty } : i;
                     }
-                    return [...prev, {...item, quantity: 1, category}];
-                });
-                notify(`Added ${item.name}`, 'success');
+                    return i;
+                }).filter(i => i.qty > 0));
             };
-            
-            // Calculate Totals
-            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-            const discount = subtotal * (VIP_PROGRAM.tiers.find(t => t.name === user.vipTier)?.discount || 0);
-            const serviceCharge = subtotal * 0.10;
-            const total = subtotal - discount + serviceCharge;
-            
-            // Crypto Reward Calculation
-            const calculateReward = (amount) => {
-                const baseReward = amount * 0.05;
-                const tierMultiplier = {
-                    'Bronze': 1, 'Silver': 1.5, 'Gold': 2, 'Platinum': 3, 'Diamond': 5
-                }[user.vipTier] || 1;
-                
-                return Math.floor(baseReward * tierMultiplier);
+
+            const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+            const discount = subtotal * (VIP_TIERS.find(t => t.name === user.tier)?.discount || 0) / 100;
+            const service = subtotal * 0.10;
+            const total = subtotal - discount + service;
+            const tokens = Math.floor(total * 0.05);
+
+            const getTier = (spent) => {
+                for (let i = VIP_TIERS.length - 1; i >= 0; i--) {
+                    if (spent >= VIP_TIERS[i].spend) return VIP_TIERS[i].name;
+                }
+                return "Bronze";
             };
-            
-            // Submit Order
-            const submitOrder = async () => {
-                if (!user.name || cart.length === 0) {
-                    notify('Please enter your name and add items', 'error');
+
+            const placeOrder = () => {
+                if (!user.name) {
+                    showNotification("Please enter your name", "error");
                     return;
                 }
-                
-                const reward = calculateReward(total);
-                setCryptoReward(reward);
-                
+                if (cart.length === 0) {
+                    showNotification("Add items to cart", "error");
+                    return;
+                }
+
                 const newOrder = {
-                    id: `EMP-${Date.now()}`,
-                    customer: user.name,
-                    table: selectedTable?.number || 'Takeaway',
-                    items: cart,
-                    subtotal,
-                    discount,
-                    serviceCharge,
+                    id: Date.now().toString().slice(-6),
+                    items: [...cart],
                     total,
-                    reward,
-                    status: 'confirmed',
-                    timestamp: new Date().toISOString(),
-                    paymentMethod
+                    table: selectedTable?.num || "Takeaway",
+                    customer: user.name,
+                    time: new Date().toLocaleTimeString(),
+                    status: "confirmed"
                 };
+
+                setOrders([newOrder, ...orders]);
                 
-                setOrders(prev => [newOrder, ...prev]);
-                setCurrentOrder(newOrder);
+                const newSpent = user.spent + total;
+                const newTokens = user.tokens + tokens;
+                const newTier = getTier(newSpent);
                 
-                setUser(prev => ({
-                    ...prev,
-                    totalSpent: prev.totalSpent + total,
-                    baristaTokens: prev.baristaTokens + reward,
-                    vipTier: calculateTier(prev.totalSpent + total)
-                }));
-                
+                setUser({ ...user, spent: newSpent, tokens: newTokens, tier: newTier });
                 setCart([]);
                 setShowPayment(false);
-                notify(`Order confirmed! +${reward} $BARISTA tokens earned!`, 'success');
+                
+                showNotification(`Order #${newOrder.id} confirmed! +${tokens} tokens`, "success");
             };
-            
-            // Components
-            const LandingPage = () => (
-                <motion.div 
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="min-h-screen relative overflow-hidden"
-                >
-                    <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black">
-                        <div className="absolute inset-0 opacity-20" style={{
-                            backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(212,175,55,0.3) 0%, transparent 50%)'
-                        }}></div>
+
+            // ==========================================
+            // PAGES
+            // ==========================================
+
+            const HomePage = () => (
+                <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-b from-black via-gray-900 to-black p-6">
+                    <div className="absolute inset-0 opacity-20">
+                        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-yellow-500 rounded-full blur-[150px]"></div>
+                        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-500 rounded-full blur-[150px]"></div>
                     </div>
                     
-                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 opacity-10">
-                        <div className="text-[40rem] leading-none">🏢</div>
-                    </div>
-                    
-                    <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6">
-                        <motion.div
-                            initial={{ y: 50, opacity: 0 }}
-                            animate={{ y: 0, opacity: 1 }}
-                            transition={{ delay: 0.2 }}
-                            className="text-center"
-                        >
-                            <div className="text-8xl mb-6 float-animation">👑</div>
-                            <h1 className="font-serif text-6xl md:text-8xl font-bold mb-4 bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200 bg-clip-text text-transparent shimmer-text">
-                                BaristaBot Pro
-                            </h1>
-                            <p className="font-elegant text-2xl md:text-3xl text-gray-400 mb-2">Empire State Edition</p>
-                            <p className="text-sm text-gray-500 tracking-[0.3em] uppercase mb-12">By Dennis Kathurima</p>
-                            
-                            <motion.div 
-                                key={coleQuote}
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="mb-12"
-                            >
-                                <p className="font-elegant text-xl text-yellow-600 italic">"{coleQuote}"</p>
-                                <p className="text-xs text-gray-600 mt-2">— J. Cole</p>
-                            </motion.div>
-                            
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
-                                {[
-                                    { id: 'dine', icon: '🍽️', title: 'Dine', desc: 'Full Experience' },
-                                    { id: 'coffee', icon: '☕', title: 'Coffee', desc: 'Specialty Bar' },
-                                    { id: 'bar', icon: '🍸', title: 'Bar', desc: 'Cocktails & Wine' },
-                                    { id: 'vip', icon: '💎', title: 'VIP', desc: 'Membership' }
-                                ].map((item, idx) => (
-                                    <motion.button
-                                        key={item.id}
-                                        initial={{ scale: 0.8, opacity: 0 }}
-                                        animate={{ scale: 1, opacity: 1 }}
-                                        transition={{ delay: 0.4 + idx * 0.1 }}
-                                        whileHover={{ scale: 1.05, y: -5 }}
-                                        onClick={() => setCurrentView(item.id)}
-                                        className="glass-gold p-6 rounded-2xl text-center group hover:shadow-2xl transition-all"
-                                    >
-                                        <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">{item.icon}</div>
-                                        <h3 className="font-bold text-lg">{item.title}</h3>
-                                        <p className="text-xs text-gray-400">{item.desc}</p>
-                                    </motion.button>
-                                ))}
-                            </div>
-                            
-                            <motion.button
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 1 }}
-                                onClick={() => setCurrentView('kitchen')}
-                                className="mt-8 text-gray-500 hover:text-white text-sm flex items-center gap-2 mx-auto"
-                            >
-                                <span>👨‍🍳</span> Staff Access
-                            </motion.button>
-                        </motion.div>
-                    </div>
-                </motion.div>
-            );
-            
-            const DineView = () => (
-                <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
-                    <div className="sticky top-0 z-40 glass-empire p-4">
-                        <div className="max-w-7xl mx-auto flex justify-between items-center">
-                            <button onClick={() => setCurrentView('landing')} className="text-2xl">←</button>
-                            <h2 className="font-serif text-2xl">🍽️ The Dining Room</h2>
-                            <div className="flex items-center gap-4">
-                                <span className={`px-3 py-1 rounded-full text-xs vip-${user.vipTier.toLowerCase()}`}>
-                                    {user.vipTier}
-                                </span>
-                                <span className="text-yellow-500 text-sm">{user.baristaTokens} $BARISTA</span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <div className="lg:col-span-2 space-y-8">
-                            <div className="glass-gold rounded-2xl p-6">
-                                <h3 className="font-serif text-xl mb-4">Select Your Table</h3>
-                                <div className="grid grid-cols-4 md:grid-cols-5 gap-3">
-                                    {TABLES.map(table => (
-                                        <motion.button
-                                            key={table.id}
-                                            whileHover={{ scale: 1.05 }}
-                                            whileTap={{ scale: 0.95 }}
-                                            onClick={() => table.status === 'available' && setSelectedTable(table)}
-                                            className={`p-3 rounded-xl border-2 text-center transition-all ${
-                                                selectedTable?.id === table.id 
-                                                    ? 'border-yellow-500 bg-yellow-500/20' 
-                                                    : table.status === 'available'
-                                                        ? 'border-green-500/50 hover:border-green-500 table-available'
-                                                        : table.status === 'occupied'
-                                                            ? 'border-red-500/50 table-occupied opacity-50'
-                                                            : 'border-yellow-500/50 table-reserved opacity-50'
-                                            }`}
-                                        >
-                                            <div className="text-lg">{table.number}</div>
-                                            <div className="text-[10px] text-gray-400">{table.zone}</div>
-                                            <div className="text-[10px]">{table.capacity}ppl</div>
-                                        </motion.button>
-                                    ))}
-                                </div>
-                                {selectedTable && (
-                                    <div className="mt-4 p-4 bg-green-500/10 rounded-xl flex justify-between items-center">
-                                        <div>
-                                            <p className="font-bold">Table {selectedTable.number} Selected</p>
-                                            <p className="text-sm text-gray-400">{selectedTable.zone} • Seats {selectedTable.capacity}</p>
-                                        </div>
-                                        <div className="text-right">
-                                            <img 
-                                                src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${selectedTable.qrCode}`}
-                                                alt="Table QR"
-                                                className="w-16 h-16 rounded-lg"
-                                            />
-                                            <p className="text-[10px] text-gray-500 mt-1">Scan to order</p>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                            
-                            {Object.entries(EMPIRE_MENU.dining).map(([category, items]) => (
-                                <div key={category} className="space-y-4">
-                                    <h3 className="font-serif text-2xl capitalize text-yellow-500">{category}</h3>
-                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        {items.map(item => (
-                                            <motion.div
-                                                key={item.id}
-                                                whileHover={{ scale: 1.02 }}
-                                                className="glass-gold rounded-xl p-4 flex gap-4 cursor-pointer"
-                                                onClick={() => addToCart(item, category)}
-                                            >
-                                                <div className="text-4xl">{item.image}</div>
-                                                <div className="flex-1">
-                                                    <div className="flex justify-between items-start">
-                                                        <h4 className="font-bold">{item.name}</h4>
-                                                        <span className="text-yellow-500 font-bold">KES {item.price.toLocaleString()}</span>
-                                                    </div>
-                                                    <p className="text-sm text-gray-400 mt-1">{item.description}</p>
-                                                    <div className="flex justify-between items-center mt-2">
-                                                        <span className="text-xs text-gray-500">⏱️ {item.prepTime} mins</span>
-                                                        <button className="text-xs bg-yellow-500/20 text-yellow-500 px-3 py-1 rounded-full hover:bg-yellow-500 hover:text-black transition">
-                                                            Add to Order
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </motion.div>
-                                        ))}
-                                    </div>
-                                </div>
+                    <div className="relative z-10 text-center">
+                        <div className="text-8xl mb-8 animate-float">👑</div>
+                        <h1 className="font-serif text-6xl md:text-8xl font-bold mb-4 bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200 bg-clip-text text-transparent">
+                            BaristaBot Pro
+                        </h1>
+                        <p className="text-2xl text-gray-400 mb-2 font-serif">Empire State Edition</p>
+                        <p className="text-sm text-gray-500 tracking-widest uppercase mb-12">By Dennis Kathurima</p>
+                        
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+                            {[
+                                { p: "dine", icon: "🍽️", label: "Dine" },
+                                { p: "coffee", icon: "☕", label: "Coffee" },
+                                { p: "bar", icon: "🍸", label: "Bar" },
+                                { p: "vip", icon: "💎", label: "VIP" }
+                            ].map((btn, i) => (
+                                <motion.button
+                                    key={btn.p}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ delay: i * 0.1 }}
+                                    whileHover={{ scale: 1.05, y: -5 }}
+                                    onClick={() => setPage(btn.p)}
+                                    className="glass p-6 rounded-2xl hover:bg-white/10 transition"
+                                >
+                                    <div className="text-4xl mb-2">{btn.icon}</div>
+                                    <div className="font-bold">{btn.label}</div>
+                                </motion.button>
                             ))}
                         </div>
                         
+                        <button 
+                            onClick={() => setPage("kitchen")}
+                            className="mt-12 text-gray-500 hover:text-white text-sm"
+                        >
+                            👨‍🍳 Staff Access
+                        </button>
+                    </div>
+                </div>
+            );
+
+            const MenuPage = ({ title, items, icon }) => (
+                <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black pb-24">
+                    <div className="sticky top-0 z-40 glass p-4">
+                        <div className="max-w-6xl mx-auto flex justify-between items-center">
+                            <button onClick={() => setPage("home")} className="text-2xl hover:text-yellow-400">←</button>
+                            <h2 className="font-serif text-2xl">{icon} {title}</h2>
+                            <div className="flex items-center gap-3">
+                                <span className={`px-3 py-1 rounded-full text-xs ${VIP_TIERS.find(t => t.name === user.tier)?.color}`}>
+                                    {user.tier}
+                                </span>
+                                <span className="text-yellow-400 text-sm">{user.tokens} 🪙</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="lg:col-span-2">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {items.map((item, i) => (
+                                    <motion.div
+                                        key={item.id}
+                                        initial={{ opacity: 0, y: 20 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        transition={{ delay: i * 0.05 }}
+                                        whileHover={{ scale: 1.02 }}
+                                        className="glass p-4 rounded-xl flex gap-4 cursor-pointer hover:bg-white/10"
+                                        onClick={() => addToCart(item)}
+                                    >
+                                        <div className="text-4xl">{item.icon}</div>
+                                        <div className="flex-1">
+                                            <div className="flex justify-between items-start">
+                                                <h3 className="font-bold">{item.name}</h3>
+                                                <span className="text-yellow-400 font-bold">KES {item.price.toLocaleString()}</span>
+                                            </div>
+                                            <p className="text-sm text-gray-400 mt-1">{item.desc}</p>
+                                            <button className="mt-2 text-xs bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full hover:bg-yellow-500 hover:text-black transition">
+                                                Add to Order
+                                            </button>
+                                        </div>
+                                    </motion.div>
+                                ))}
+                            </div>
+                        </div>
+
                         <div className="lg:col-span-1">
-                            <div className="sticky top-24 glass-gold rounded-2xl p-6">
-                                <h3 className="font-serif text-xl mb-4">Your Experience</h3>
+                            <div className="sticky top-24 glass rounded-2xl p-6">
+                                <h3 className="font-serif text-xl mb-4">Your Order</h3>
                                 
-                                <div className="space-y-3 mb-6">
+                                <div className="space-y-3 mb-4">
                                     <input
                                         type="text"
                                         placeholder="Your Name"
-                                        className="w-full p-3 bg-black/50 border border-yellow-500/30 rounded-xl text-white"
+                                        className="w-full p-3 bg-black/50 border border-white/20 rounded-lg text-white"
                                         value={user.name}
                                         onChange={(e) => setUser({...user, name: e.target.value})}
                                     />
                                     <input
                                         type="tel"
                                         placeholder="Phone Number"
-                                        className="w-full p-3 bg-black/50 border border-yellow-500/30 rounded-xl text-white"
+                                        className="w-full p-3 bg-black/50 border border-white/20 rounded-lg text-white"
                                         value={user.phone}
                                         onChange={(e) => setUser({...user, phone: e.target.value})}
                                     />
                                 </div>
+
+                                <div className="space-y-2 mb-4 max-h-48 overflow-y-auto">
+                                    {cart.length === 0 ? (
+                                        <div className="text-center text-gray-500 py-8">
+                                            <div className="text-4xl mb-2">🛒</div>
+                                            <p>Your cart is empty</p>
+                                        </div>
+                                    ) : (
+                                        cart.map(item => (
+                                            <div key={item.id} className="flex items-center gap-2 bg-black/30 p-2 rounded-lg">
+                                                <span className="text-xl">{item.icon}</span>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="text-sm font-bold truncate">{item.name}</div>
+                                                    <div className="text-xs text-yellow-400">KES {(item.price * item.qty).toLocaleString()}</div>
+                                                </div>
+                                                <div className="flex items-center gap-1">
+                                                    <button onClick={() => updateQty(item.id, -1)} className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-xs hover:bg-gray-600">-</button>
+                                                    <span className="w-4 text-center text-sm">{item.qty}</span>
+                                                    <button onClick={() => updateQty(item.id, 1)} className="w-6 h-6 rounded-full bg-yellow-500 text-black flex items-center justify-center text-xs hover:bg-yellow-400">+</button>
+                                                </div>
+                                                <button onClick={() => removeFromCart(item.id)} className="text-red-400 hover:text-red-300 text-xs ml-1">×</button>
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+
+                                {cart.length > 0 && (
+                                    <div className="space-y-1 mb-4 pb-4 border-b border-white/10 text-sm">
+                                        <div className="flex justify-between text-gray-400">
+                                            <span>Subtotal</span>
+                                            <span>KES {subtotal.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between text-green-400">
+                                            <span>VIP Discount ({user.tier})</span>
+                                            <span>-KES {discount.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between text-gray-400">
+                                            <span>Service (10%)</span>
+                                            <span>KES {service.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between text-xl font-bold text-yellow-400 pt-2">
+                                            <span>Total</span>
+                                            <span>KES {total.toLocaleString()}</span>
+                                        </div>
+                                        <div className="text-xs text-purple-400 mt-1">
+                                            🪙 You'll earn {tokens} tokens
+                                        </div>
+                                    </div>
+                                )}
+
+                                <button
+                                    onClick={() => cart.length > 0 && setShowPayment(true)}
+                                    disabled={cart.length === 0 || !user.name}
+                                    className="w-full py-3 gold-gradient text-black rounded-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-yellow-500/20 transition"
+                                >
+                                    {cart.length === 0 ? "Add Items" : `Pay KES ${total.toLocaleString()}`}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+
+            const DinePage = () => (
+                <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black pb-24">
+                    <div className="sticky top-0 z-40 glass p-4">
+                        <div className="max-w-6xl mx-auto flex justify-between items-center">
+                            <button onClick={() => setPage("home")} className="text-2xl hover:text-yellow-400">←</button>
+                            <h2 className="font-serif text-2xl">🍽️ The Dining Room</h2>
+                            <div className="flex items-center gap-3">
+                                <span className={`px-3 py-1 rounded-full text-xs ${VIP_TIERS.find(t => t.name === user.tier)?.color}`}>
+                                    {user.tier}
+                                </span>
+                                <span className="text-yellow-400 text-sm">{user.tokens} 🪙</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="lg:col-span-2 space-y-6">
+                            <div className="glass rounded-2xl p-6">
+                                <h3 className="font-serif text-xl mb-4">Select Your Table</h3>
+                                <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
+                                    {TABLES.map(table => (
+                                        <button
+                                            key={table.id}
+                                            onClick={() => table.status === "available" && setSelectedTable(table)}
+                                            className={`p-3 rounded-lg border-2 text-center transition ${
+                                                selectedTable?.id === table.id
+                                                    ? "border-yellow-400 bg-yellow-400/20"
+                                                    : table.status === "available"
+                                                        ? "border-green-500/50 bg-green-500/10 hover:border-green-500"
+                                                        : table.status === "occupied"
+                                                            ? "border-red-500/50 bg-red-500/10 opacity-50 cursor-not-allowed"
+                                                            : "border-yellow-500/50 bg-yellow-500/10 opacity-50 cursor-not-allowed"
+                                            }`}
+                                        >
+                                            <div className="font-bold">{table.num}</div>
+                                            <div className="text-xs text-gray-400">{table.seats} seats</div>
+                                        </button>
+                                    ))}
+                                </div>
+                                {selectedTable && (
+                                    <div className="mt-4 p-4 bg-green-500/10 border border-green-500/30 rounded-xl">
+                                        <p className="font-bold text-green-400">Table {selectedTable.num} Selected</p>
+                                        <p className="text-sm text-gray-400">Perfect for your dining experience</p>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div>
+                                <h3 className="font-serif text-2xl text-yellow-400 mb-4">Menu</h3>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    {[...FOOD_MENU, ...COFFEE_MENU].map((item, i) => (
+                                        <motion.div
+                                            key={item.id}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: i * 0.05 }}
+                                            whileHover={{ scale: 1.02 }}
+                                            className="glass p-4 rounded-xl flex gap-4 cursor-pointer hover:bg-white/10"
+                                            onClick={() => addToCart(item)}
+                                        >
+                                            <div className="text-4xl">{item.icon}</div>
+                                            <div className="flex-1">
+                                                <div className="flex justify-between items-start">
+                                                    <h3 className="font-bold">{item.name}</h3>
+                                                    <span className="text-yellow-400 font-bold">KES {item.price.toLocaleString()}</span>
+                                                </div>
+                                                <p className="text-sm text-gray-400 mt-1">{item.desc}</p>
+                                                <button className="mt-2 text-xs bg-yellow-500/20 text-yellow-400 px-3 py-1 rounded-full hover:bg-yellow-500 hover:text-black transition">
+                                                    Add to Order
+                                                </button>
+                                            </div>
+                                        </motion.div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="lg:col-span-1">
+                            <div className="sticky top-24 glass rounded-2xl p-6">
+                                <h3 className="font-serif text-xl mb-4">Your Experience</h3>
                                 
-                                <div className="space-y-3 mb-6 max-h-64 overflow-y-auto">
+                                <div className="space-y-3 mb-4">
+                                    <input
+                                        type="text"
+                                        placeholder="Your Name"
+                                        className="w-full p-3 bg-black/50 border border-white/20 rounded-lg text-white"
+                                        value={user.name}
+                                        onChange={(e) => setUser({...user, name: e.target.value})}
+                                    />
+                                    <input
+                                        type="tel"
+                                        placeholder="Phone Number"
+                                        className="w-full p-3 bg-black/50 border border-white/20 rounded-lg text-white"
+                                        value={user.phone}
+                                        onChange={(e) => setUser({...user, phone: e.target.value})}
+                                    />
+                                </div>
+
+                                <div className="space-y-2 mb-4 max-h-48 overflow-y-auto">
                                     {cart.length === 0 ? (
                                         <div className="text-center text-gray-500 py-8">
                                             <div className="text-4xl mb-2">🍽️</div>
@@ -545,230 +477,153 @@
                                         </div>
                                     ) : (
                                         cart.map(item => (
-                                            <div key={item.id} className="flex items-center gap-3 bg-black/30 p-3 rounded-xl">
-                                                <span className="text-2xl">{item.image || '•'}</span>
-                                                <div className="flex-1">
-                                                    <div className="text-sm font-bold">{item.name}</div>
-                                                    <div className="text-xs text-yellow-500">KES {(item.price * item.quantity).toLocaleString()}</div>
+                                            <div key={item.id} className="flex items-center gap-2 bg-black/30 p-2 rounded-lg">
+                                                <span className="text-xl">{item.icon}</span>
+                                                <div className="flex-1 min-w-0">
+                                                    <div className="text-sm font-bold truncate">{item.name}</div>
+                                                    <div className="text-xs text-yellow-400">KES {(item.price * item.qty).toLocaleString()}</div>
                                                 </div>
-                                                <div className="flex items-center gap-2">
-                                                    <button 
-                                                        onClick={() => setCart(prev => prev.map(i => i.id === item.id ? {...i, quantity: Math.max(0, i.quantity - 1)} : i).filter(i => i.quantity > 0))}
-                                                        className="w-6 h-6 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center"
-                                                    >-</button>
-                                                    <span className="w-6 text-center">{item.quantity}</span>
-                                                    <button 
-                                                        onClick={() => setCart(prev => prev.map(i => i.id === item.id ? {...i, quantity: i.quantity + 1} : i))}
-                                                        className="w-6 h-6 rounded-full bg-yellow-500 text-black hover:bg-yellow-400 flex items-center justify-center"
-                                                    >+</button>
+                                                <div className="flex items-center gap-1">
+                                                    <button onClick={() => updateQty(item.id, -1)} className="w-6 h-6 rounded-full bg-gray-700 flex items-center justify-center text-xs hover:bg-gray-600">-</button>
+                                                    <span className="w-4 text-center text-sm">{item.qty}</span>
+                                                    <button onClick={() => updateQty(item.id, 1)} className="w-6 h-6 rounded-full bg-yellow-500 text-black flex items-center justify-center text-xs hover:bg-yellow-400">+</button>
                                                 </div>
                                             </div>
                                         ))
                                     )}
                                 </div>
-                                
+
                                 {cart.length > 0 && (
-                                    <div className="space-y-2 mb-6 pb-6 border-b border-yellow-500/30">
-                                        <div className="flex justify-between text-sm">
-                                            <span className="text-gray-400">Subtotal</span>
+                                    <div className="space-y-1 mb-4 pb-4 border-b border-white/10 text-sm">
+                                        <div className="flex justify-between text-gray-400">
+                                            <span>Subtotal</span>
                                             <span>KES {subtotal.toLocaleString()}</span>
                                         </div>
-                                        <div className="flex justify-between text-sm text-green-400">
-                                            <span>VIP Discount ({user.vipTier})</span>
+                                        <div className="flex justify-between text-green-400">
+                                            <span>VIP {user.tier}</span>
                                             <span>-KES {discount.toLocaleString()}</span>
                                         </div>
-                                        <div className="flex justify-between text-sm">
-                                            <span className="text-gray-400">Service Charge (10%)</span>
-                                            <span>KES {serviceCharge.toLocaleString()}</span>
+                                        <div className="flex justify-between text-gray-400">
+                                            <span>Service (10%)</span>
+                                            <span>KES {service.toLocaleString()}</span>
                                         </div>
-                                        <div className="flex justify-between text-xl font-bold text-yellow-500 pt-2">
+                                        <div className="flex justify-between text-xl font-bold text-yellow-400 pt-2">
                                             <span>Total</span>
                                             <span>KES {total.toLocaleString()}</span>
                                         </div>
-                                        <div className="text-xs text-purple-400 flex items-center gap-1">
-                                            <span>🪙</span>
-                                            <span>You'll earn {calculateReward(total)} $BARISTA tokens</span>
+                                        <div className="text-xs text-purple-400 mt-1">
+                                            🪙 Earn {tokens} $BARISTA tokens
                                         </div>
                                     </div>
                                 )}
-                                
-                                <div className="space-y-2 mb-6">
-                                    <p className="text-xs text-gray-400 mb-2">Payment Method</p>
-                                    {[
-                                        { id: 'mpesa', name: 'M-Pesa', icon: 'M', color: 'bg-green-600' },
-                                        { id: 'card', name: 'Card/Apple Pay', icon: '💳', color: 'bg-blue-600' },
-                                        { id: 'crypto', name: 'Crypto (5% off)', icon: '₿', color: 'bg-orange-600' },
-                                        { id: 'tokens', name: '$BARISTA Tokens', icon: '🪙', color: 'bg-purple-600' }
-                                    ].map(method => (
-                                        <button
-                                            key={method.id}
-                                            onClick={() => setPaymentMethod(method.id)}
-                                            className={`w-full p-3 rounded-xl flex items-center gap-3 transition-all ${
-                                                paymentMethod === method.id 
-                                                    ? 'bg-yellow-500/20 border border-yellow-500' 
-                                                    : 'bg-black/30 border border-transparent hover:bg-black/50'
-                                            }`}
-                                        >
-                                            <div className={`w-8 h-8 rounded-full ${method.color} flex items-center justify-center text-sm`}>
-                                                {method.icon}
-                                            </div>
-                                            <span className="text-sm">{method.name}</span>
-                                        </button>
-                                    ))}
-                                </div>
-                                
+
                                 <button
                                     onClick={() => cart.length > 0 && setShowPayment(true)}
                                     disabled={cart.length === 0 || !user.name}
-                                    className="w-full py-4 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black rounded-xl font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-yellow-500/20 transition-all"
+                                    className="w-full py-3 gold-gradient text-black rounded-xl font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-yellow-500/20 transition"
                                 >
-                                    {cart.length === 0 ? 'Add Items' : `Pay KES ${total.toLocaleString()}`}
+                                    {cart.length === 0 ? "Add Items" : `Pay KES ${total.toLocaleString()}`}
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
             );
-        ];
-     const VIPView = () => (
-                <div className="min-h-screen bg-gradient-to-b from-purple-900 via-black to-black p-6">
+
+            const VIPPage = () => (
+                <div className="min-h-screen bg-gradient-to-b from-purple-900 via-black to-black p-6 pb-24">
                     <div className="max-w-4xl mx-auto">
-                        <button onClick={() => setCurrentView('landing')} className="mb-6 text-2xl">←</button>
+                        <button onClick={() => setPage("home")} className="mb-6 text-2xl hover:text-yellow-400">←</button>
                         
                         <div className="text-center mb-12">
                             <h2 className="font-serif text-5xl mb-4">💎 VIP Membership</h2>
                             <p className="text-gray-400">Elevate your experience with Dennis Kathurima</p>
                         </div>
-                        
-                        <div className="glass-gold rounded-3xl p-8 mb-8 text-center">
-                            <div className={`inline-block p-6 rounded-full vip-${user.vipTier.toLowerCase()} mb-4`}>
+
+                        <div className="glass rounded-3xl p-8 mb-8 text-center">
+                            <div className={`inline-block p-6 rounded-full mb-4 ${VIP_TIERS.find(t => t.name === user.tier)?.color}`}>
                                 <span className="text-6xl">👑</span>
                             </div>
-                            <h3 className="font-serif text-3xl mb-2">{user.vipTier} Member</h3>
-                            <p className="text-gray-400 mb-4">Total Spent: KES {user.totalSpent.toLocaleString()}</p>
-                            <p className="text-2xl text-yellow-500 font-bold">{user.baristaTokens} $BARISTA</p>
-                            <p className="text-sm text-gray-500">Loyalty Tokens</p>
+                            <h3 className="font-serif text-3xl mb-2">{user.tier} Member</h3>
+                            <p className="text-gray-400 mb-4">Total Spent: KES {user.spent.toLocaleString()}</p>
+                            <p className="text-4xl text-yellow-400 font-bold">{user.tokens}</p>
+                            <p className="text-sm text-gray-500">$BARISTA Tokens</p>
                         </div>
-                        
-                        <div className="space-y-4 mb-12">
-                            {VIP_PROGRAM.tiers.map((tier, idx) => {
-                                const isCurrent = tier.name === user.vipTier;
-                                const isUnlocked = user.totalSpent >= tier.minSpend;
-                                const progress = Math.min(100, (user.totalSpent / tier.minSpend) * 100);
+
+                        <div className="space-y-4">
+                            {VIP_TIERS.map((tier, i) => {
+                                const isCurrent = tier.name === user.tier;
+                                const unlocked = user.spent >= tier.spend;
                                 
                                 return (
                                     <div 
                                         key={tier.name}
-                                        className={`p-6 rounded-2xl border-2 transition-all ${
-                                            isCurrent ? 'border-yellow-500 bg-yellow-500/10' : 
-                                            isUnlocked ? 'border-gray-600 bg-gray-900/50' : 
-                                            'border-gray-800 opacity-50'
+                                        className={`p-6 rounded-2xl border-2 ${
+                                            isCurrent ? "border-yellow-400 bg-yellow-400/10" :
+                                            unlocked ? "border-gray-600 bg-gray-900/50" :
+                                            "border-gray-800 opacity-50"
                                         }`}
                                     >
-                                        <div className="flex justify-between items-center mb-3">
+                                        <div className="flex justify-between items-center">
                                             <div className="flex items-center gap-3">
-                                                <span className={`text-2xl vip-${tier.name.toLowerCase()} w-10 h-10 rounded-full flex items-center justify-center`}>
-                                                    {idx + 1}
-                                                </span>
+                                                <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${tier.color}`}>
+                                                    {i + 1}
+                                                </div>
                                                 <div>
                                                     <h4 className="font-bold text-lg">{tier.name}</h4>
-                                                    <p className="text-xs text-gray-400">Min. Spend: KES {tier.minSpend.toLocaleString()}</p>
+                                                    <p className="text-xs text-gray-400">Min: KES {tier.spend.toLocaleString()}</p>
                                                 </div>
                                             </div>
                                             <div className="text-right">
-                                                <p className="text-2xl font-bold text-yellow-500">{tier.discount * 100}%</p>
+                                                <p className="text-2xl font-bold text-yellow-400">{tier.discount}%</p>
                                                 <p className="text-xs text-gray-400">Discount</p>
                                             </div>
-                                        </div>
-                                        
-                                        {isCurrent && (
-                                            <div className="mt-3">
-                                                <div className="h-2 bg-gray-700 rounded-full overflow-hidden">
-                                                    <div 
-                                                        className="h-full bg-yellow-500 transition-all"
-                                                        style={{ width: `${progress}%` }}
-                                                    ></div>
-                                                </div>
-                                                <p className="text-xs text-gray-400 mt-2">{progress.toFixed(0)}% to next tier</p>
-                                            </div>
-                                        )}
-                                        
-                                        <div className="mt-3 flex flex-wrap gap-2">
-                                            {tier.perks.map(perk => (
-                                                <span key={perk} className="text-xs bg-black/50 px-3 py-1 rounded-full">
-                                                    ✓ {perk}
-                                                </span>
-                                            ))}
                                         </div>
                                     </div>
                                 );
                             })}
                         </div>
-                        
-                        <div className="glass-gold rounded-3xl p-8 text-center">
-                            <h3 className="font-serif text-2xl mb-4">Your NFT Membership</h3>
-                            <div className="relative w-80 h-48 mx-auto perspective-1000">
-                                <div className="nft-card w-full h-full relative">
-                                    <div className="nft-front bg-gradient-to-br from-yellow-600 to-yellow-800 rounded-2xl p-6 flex flex-col justify-between">
-                                        <div className="flex justify-between items-start">
-                                            <span className="text-2xl">👑</span>
-                                            <span className="text-xs bg-black/30 px-2 py-1 rounded">EMPIRE</span>
-                                        </div>
-                                        <div>
-                                            <p className="text-xs opacity-70">Member</p>
-                                            <p className="font-bold text-lg">{user.name || 'Guest'}</p>
-                                            <p className="text-xs mt-2 opacity-70">ID: {user.phone || '0000'} • {user.vipTier}</p>
-                                        </div>
-                                    </div>
-                                    <div className="nft-back bg-gradient-to-br from-purple-600 to-purple-800 rounded-2xl p-6 flex flex-col justify-center items-center">
-                                        <p className="text-sm mb-2">Scan for Rewards</p>
-                                        <div className="w-24 h-24 bg-white rounded-lg flex items-center justify-center">
-                                            <span className="text-black text-xs">QR CODE</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <p className="text-sm text-gray-400 mt-4">Hover to flip • Blockchain verified</p>
-                        </div>
                     </div>
                 </div>
             );
-            
-            const KitchenView = () => (
-                <div className="min-h-screen bg-black text-white p-6">
+
+            const KitchenPage = () => (
+                <div className="min-h-screen bg-black text-white p-6 pb-24">
                     <div className="max-w-7xl mx-auto">
                         <div className="flex justify-between items-center mb-8">
                             <h2 className="font-serif text-4xl">👨‍🍳 Empire Kitchen</h2>
-                            <button onClick={() => setCurrentView('landing')} className="text-gray-400 hover:text-white">Exit</button>
+                            <button onClick={() => setPage("home")} className="text-gray-400 hover:text-white">Exit</button>
                         </div>
-                        
-                        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                            {['Received', 'Prepping', 'Plating', 'Served'].map((status, idx) => (
-                                <div key={status} className="bg-gray-900 rounded-2xl p-4">
+
+                        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            {["Received", "Preparing", "Ready", "Served"].map((status, i) => (
+                                <div key={status} className="glass rounded-2xl p-4">
                                     <h3 className={`font-bold mb-4 text-center py-2 rounded-xl ${
-                                        idx === 0 ? 'bg-yellow-500/20 text-yellow-500' :
-                                        idx === 1 ? 'bg-orange-500/20 text-orange-500' :
-                                        idx === 2 ? 'bg-blue-500/20 text-blue-500' :
-                                        'bg-green-500/20 text-green-500'
+                                        i === 0 ? "bg-yellow-500/20 text-yellow-400" :
+                                        i === 1 ? "bg-orange-500/20 text-orange-400" :
+                                        i === 2 ? "bg-blue-500/20 text-blue-400" :
+                                        "bg-green-500/20 text-green-400"
                                     }`}>
                                         {status}
                                     </h3>
-                                    <div className="space-y-3">
-                                        {orders.filter(o => {
-                                            const statusMap = ['confirmed', 'preparing', 'ready', 'served'];
-                                            return o.status === statusMap[idx];
-                                        }).map(order => (
-                                            <div key={order.id} className="bg-black/50 p-4 rounded-xl border border-gray-800">
-                                                <div className="flex justify-between mb-2">
-                                                    <span className="font-bold">#{order.id}</span>
+                                    <div className="space-y-2">
+                                        {orders.filter(o => 
+                                            (i === 0 && o.status === "confirmed") ||
+                                            (i === 1 && o.status === "preparing") ||
+                                            (i === 2 && o.status === "ready") ||
+                                            (i === 3 && o.status === "served")
+                                        ).map(order => (
+                                            <div key={order.id} className="bg-black/50 p-3 rounded-lg border border-white/10">
+                                                <div className="flex justify-between mb-1">
+                                                    <span className="font-bold text-sm">#{order.id}</span>
                                                     <span className="text-xs text-gray-400">{order.table}</span>
                                                 </div>
-                                                {order.items.map((item, i) => (
-                                                    <div key={i} className="text-sm text-gray-300">• {item.quantity}x {item.name}</div>
+                                                {order.items.map((item, idx) => (
+                                                    <div key={idx} className="text-xs text-gray-300">• {item.qty}x {item.name}</div>
                                                 ))}
-                                                <div className="mt-3 pt-3 border-t border-gray-800 flex justify-between">
-                                                    <span className="text-xs text-gray-500">{order.customer}</span>
-                                                    <span className="text-xs text-yellow-500">KES {order.total.toLocaleString()}</span>
+                                                <div className="mt-2 pt-2 border-t border-white/10 flex justify-between text-xs">
+                                                    <span className="text-gray-500">{order.customer}</span>
+                                                    <span className="text-yellow-400">KES {order.total.toLocaleString()}</span>
                                                 </div>
                                             </div>
                                         ))}
@@ -779,298 +634,132 @@
                     </div>
                 </div>
             );
-            
-            const CoffeeView = () => (
-                <div className="min-h-screen bg-gradient-to-b from-[#2C1810] to-black">
-                    <div className="sticky top-0 z-40 glass-empire p-4">
-                        <div className="max-w-7xl mx-auto flex justify-between items-center">
-                            <button onClick={() => setCurrentView('landing')} className="text-2xl">←</button>
-                            <h2 className="font-serif text-2xl">☕ The Coffee Bar</h2>
-                            <div className="flex items-center gap-4">
-                                <span className={`px-3 py-1 rounded-full text-xs vip-${user.vipTier.toLowerCase()}`}>
-                                    {user.vipTier}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div className="max-w-7xl mx-auto p-6">
-                        <div className="mb-8">
-                            <h3 className="font-serif text-3xl text-yellow-500 mb-4">Signature Collection</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                {EMPIRE_MENU.coffee.signature.map(item => (
-                                    <motion.div
-                                        key={item.id}
-                                        whileHover={{ scale: 1.02 }}
-                                        className="glass-gold rounded-2xl p-6 text-center cursor-pointer"
-                                        onClick={() => addToCart(item, 'coffee')}
-                                    >
-                                        <div className="text-6xl mb-4">{item.image}</div>
-                                        <h4 className="font-bold text-xl mb-2">{item.name}</h4>
-                                        <p className="text-sm text-gray-400 mb-4">{item.description}</p>
-                                        <div className="flex justify-between items-center">
-                                            <span className="text-yellow-500 font-bold">KES {item.price}</span>
-                                            <span className="text-xs text-gray-500">{item.origin}</span>
-                                        </div>
-                                        <button className="mt-4 w-full py-2 bg-yellow-500/20 text-yellow-500 rounded-lg hover:bg-yellow-500 hover:text-black transition">
-                                            Add to Order
-                                        </button>
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h3 className="font-serif text-3xl text-yellow-500 mb-4">Classics</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                {EMPIRE_MENU.coffee.classics.map(item => (
-                                    <motion.div
-                                        key={item.id}
-                                        whileHover={{ scale: 1.02 }}
-                                        className="glass-gold rounded-xl p-4 flex justify-between items-center cursor-pointer"
-                                        onClick={() => addToCart(item, 'coffee')}
-                                    >
-                                        <div>
-                                            <h4 className="font-bold">{item.name}</h4>
-                                            <p className="text-xs text-gray-400">{item.description}</p>
-                                        </div>
-                                        <div className="text-right">
-                                            <span className="text-yellow-500 font-bold">KES {item.price}</span>
-                                            <button className="block mt-1 text-xs bg-yellow-500/20 text-yellow-500 px-3 py-1 rounded-full">
-                                                Add
-                                            </button>
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-            
-            const BarView = () => (
-                <div className="min-h-screen bg-gradient-to-b from-indigo-900 to-black">
-                    <div className="sticky top-0 z-40 glass-empire p-4">
-                        <div className="max-w-7xl mx-auto flex justify-between items-center">
-                            <button onClick={() => setCurrentView('landing')} className="text-2xl">←</button>
-                            <h2 className="font-serif text-2xl">🍸 The Empire Bar</h2>
-                        </div>
-                    </div>
-                    
-                    <div className="max-w-7xl mx-auto p-6">
-                        <div className="mb-8">
-                            <h3 className="font-serif text-3xl text-purple-400 mb-4">Signature Cocktails</h3>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                {EMPIRE_MENU.bar.cocktails.map(item => (
-                                    <motion.div
-                                        key={item.id}
-                                        whileHover={{ scale: 1.02 }}
-                                        className="glass-gold rounded-2xl p-6 text-center cursor-pointer"
-                                        onClick={() => addToCart(item, 'bar')}
-                                    >
-                                        <div className="text-6xl mb-4">{item.image}</div>
-                                        <h4 className="font-bold text-xl mb-2">{item.name}</h4>
-                                        <p className="text-sm text-gray-400 mb-4">{item.description}</p>
-                                        <span className="text-purple-400 font-bold text-xl">KES {item.price}</span>
-                                        <button className="mt-4 w-full py-2 bg-purple-500/20 text-purple-400 rounded-lg hover:bg-purple-500 hover:text-white transition">
-                                            Add to Order
-                                        </button>
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <h3 className="font-serif text-3xl text-purple-400 mb-4">Wine Selection</h3>
-                            <div className="space-y-4">
-                                {EMPIRE_MENU.bar.wine.map(item => (
-                                    <motion.div
-                                        key={item.id}
-                                        whileHover={{ scale: 1.01 }}
-                                        className="glass-gold rounded-xl p-4 flex justify-between items-center cursor-pointer"
-                                        onClick={() => addToCart(item, 'bar')}
-                                    >
-                                        <div className="flex items-center gap-4">
-                                            <span className="text-4xl">{item.image}</span>
-                                            <div>
-                                                <h4 className="font-bold text-lg">{item.name}</h4>
-                                                <p className="text-sm text-gray-400">{item.description}</p>
-                                            </div>
-                                        </div>
-                                        <div className="text-right">
-                                            <span className="text-purple-400 font-bold text-2xl">KES {item.price.toLocaleString()}</span>
-                                            <button className="block mt-1 text-xs bg-purple-500/20 text-purple-400 px-4 py-2 rounded-full">
-                                                Add
-                                            </button>
-                                        </div>
-                                    </motion.div>
-                                ))}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            );
-            
-            const NotificationContainer = () => (
-                <div className="fixed top-4 right-4 z-50 space-y-2">
+
+            // ==========================================
+            // RENDER
+            // ==========================================
+
+            return (
+                <div className="min-h-screen bg-black text-white">
+                    {/* Notification */}
                     <AnimatePresence>
-                        {notifications.map(n => (
+                        {notification && (
                             <motion.div
-                                key={n.id}
                                 initial={{ x: 100, opacity: 0 }}
                                 animate={{ x: 0, opacity: 1 }}
                                 exit={{ x: 100, opacity: 0 }}
-                                className={`px-6 py-4 rounded-xl shadow-2xl font-medium ${
-                                    n.type === 'success' ? 'bg-green-600' :
-                                    n.type === 'error' ? 'bg-red-600' :
-                                    'bg-yellow-600'
+                                className={`fixed top-4 right-4 z-50 px-6 py-4 rounded-xl shadow-2xl font-medium ${
+                                    notification.type === "success" ? "bg-green-600" :
+                                    notification.type === "error" ? "bg-red-600" :
+                                    "bg-yellow-600"
                                 }`}
                             >
-                                {n.message}
+                                {notification.msg}
                             </motion.div>
-                        ))}
+                        )}
                     </AnimatePresence>
-                </div>
-            );
-            
-            const PaymentModal = () => (
-                <AnimatePresence>
-                    {showPayment && (
-                        <motion.div
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
-                        >
+
+                    {/* Payment Modal */}
+                    <AnimatePresence>
+                        {showPayment && (
                             <motion.div
-                                initial={{ scale: 0.9, opacity: 0 }}
-                                animate={{ scale: 1, opacity: 1 }}
-                                exit={{ scale: 0.9, opacity: 0 }}
-                                className="glass-gold rounded-3xl p-8 max-w-md w-full"
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                exit={{ opacity: 0 }}
+                                className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4"
                             >
-                                <h3 className="font-serif text-2xl mb-6 text-center">Complete Payment</h3>
-                                
-                                <div className="text-center mb-8">
-                                    <p className="text-gray-400 mb-2">Total Amount</p>
-                                    <p className="text-4xl font-bold text-yellow-500">KES {total.toLocaleString()}</p>
-                                    {paymentMethod === 'crypto' && (
-                                        <p className="text-sm text-green-400 mt-2">5% discount applied!</p>
-                                    )}
-                                </div>
-                                
-                                <div className="space-y-4 mb-8">
-                                    <div className="p-4 bg-black/30 rounded-xl">
-                                        <p className="text-sm text-gray-400 mb-1">Paying with</p>
-                                        <p className="font-bold capitalize">{paymentMethod === 'mpesa' ? 'M-Pesa' : paymentMethod === 'card' ? 'Card/Apple Pay' : paymentMethod === 'crypto' ? 'Cryptocurrency' : '$BARISTA Tokens'}</p>
-                                    </div>
+                                <motion.div
+                                    initial={{ scale: 0.9, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    exit={{ scale: 0.9, opacity: 0 }}
+                                    className="glass rounded-3xl p-8 max-w-md w-full"
+                                >
+                                    <h3 className="font-serif text-2xl mb-6 text-center">Complete Payment</h3>
                                     
-                                    {paymentMethod === 'mpesa' && (
-                                        <div className="p-4 bg-green-500/10 border border-green-500/30 rounded-xl">
-                                            <p className="text-sm text-green-400">STK Push will be sent to your phone</p>
-                                            <input 
-                                                type="tel" 
-                                                placeholder="Enter M-Pesa number"
-                                                className="w-full mt-2 p-3 bg-black/50 rounded-lg text-white"
-                                            />
-                                        </div>
-                                    )}
-                                </div>
-                                
-                                <div className="flex gap-4">
-                                    <button
-                                        onClick={() => setShowPayment(false)}
-                                        className="flex-1 py-3 bg-gray-700 rounded-xl font-bold hover:bg-gray-600 transition"
-                                    >
-                                        Cancel
-                                    </button>
-                                    <button
-                                        onClick={submitOrder}
-                                        className="flex-1 py-3 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black rounded-xl font-bold hover:shadow-lg transition"
-                                    >
-                                        Confirm Payment
-                                    </button>
-                                </div>
+                                    <div className="text-center mb-8">
+                                        <p className="text-gray-400 mb-2">Total Amount</p>
+                                        <p className="text-4xl font-bold text-yellow-400">KES {total.toLocaleString()}</p>
+                                    </div>
+
+                                    <div className="space-y-3 mb-8">
+                                        {["M-Pesa", "Card", "Crypto"].map((method) => (
+                                            <button
+                                                key={method}
+                                                className="w-full p-4 rounded-xl bg-black/50 border border-white/20 hover:border-yellow-400 transition text-left"
+                                            >
+                                                <div className="font-bold">{method}</div>
+                                                <div className="text-xs text-gray-400">
+                                                    {method === "M-Pesa" ? "STK Push to phone" :
+                                                     method === "Card" ? "Visa, Mastercard, Apple Pay" :
+                                                     "Bitcoin, Ethereum, Solana"}
+                                                </div>
+                                            </button>
+                                        ))}
+                                    </div>
+
+                                    <div className="flex gap-4">
+                                        <button
+                                            onClick={() => setShowPayment(false)}
+                                            className="flex-1 py-3 bg-gray-700 rounded-xl font-bold hover:bg-gray-600 transition"
+                                        >
+                                            Cancel
+                                        </button>
+                                        <button
+                                            onClick={placeOrder}
+                                            className="flex-1 py-3 gold-gradient text-black rounded-xl font-bold hover:shadow-lg transition"
+                                        >
+                                            Confirm Payment
+                                        </button>
+                                    </div>
+                                </motion.div>
                             </motion.div>
-                        </motion.div>
+                        )}
+                    </AnimatePresence>
+
+                    {/* Main Content */}
+                    {page === "home" && <HomePage />}
+                    {page === "dine" && <DinePage />}
+                    {page === "coffee" && <MenuPage title="Coffee Bar" items={COFFEE_MENU} icon="☕" />}
+                    {page === "bar" && <MenuPage title="The Bar" items={BAR_MENU} icon="🍸" />}
+                    {page === "vip" && <VIPPage />}
+                    {page === "kitchen" && <KitchenPage />}
+
+                    {/* Bottom Nav */}
+                    {page !== "home" && (
+                        <div className="fixed bottom-6 left-1/2 -translate-x-1/2 glass rounded-full px-6 py-3 flex gap-6 z-40">
+                            <button onClick={() => setPage("home")} className="hover:text-yellow-400 transition text-xl" title="Home">🏠</button>
+                            <button onClick={() => setPage("dine")} className="hover:text-yellow-400 transition text-xl" title="Dine">🍽️</button>
+                            <button onClick={() => setPage("coffee")} className="hover:text-yellow-400 transition text-xl" title="Coffee">☕</button>
+                            <button onClick={() => setPage("bar")} className="hover:text-yellow-400 transition text-xl" title="Bar">🍸</button>
+                            <button onClick={() => setPage("vip")} className="hover:text-yellow-400 transition text-xl" title="VIP">💎</button>
+                        </div>
                     )}
-                </AnimatePresence>
-            ); 
-            // Main Render
-            return (
-                <div className="min-h-screen bg-black text-white">
-                    <NotificationContainer />
-                    <PaymentModal />
-                    
-                    {currentView === 'landing' && <LandingPage />}
-                    {currentView === 'dine' && <DineView />}
-                    {currentView === 'vip' && <VIPView />}
-                    {currentView === 'kitchen' && <KitchenView />}
-                    {currentView === 'coffee' && <CoffeeView />}
-                    {currentView === 'bar' && <BarView />}
-                    
-                    {/* Quick Nav Footer */}
-                    {currentView !== 'landing' && (
-                        <motion.div 
-                            initial={{ y: 100 }}
-                            animate={{ y: 0 }}
-                            className="fixed bottom-6 left-1/2 transform -translate-x-1/2 glass-gold rounded-full px-6 py-3 flex gap-6 z-40"
-                        >
-                            <button onClick={() => setCurrentView('landing')} className="hover:text-yellow-500 transition text-xl" title="Home">🏠</button>
-                            <button onClick={() => setCurrentView('dine')} className="hover:text-yellow-500 transition text-xl" title="Dine">🍽️</button>
-                            <button onClick={() => setCurrentView('coffee')} className="hover:text-yellow-500 transition text-xl" title="Coffee">☕</button>
-                            <button onClick={() => setCurrentView('bar')} className="hover:text-yellow-500 transition text-xl" title="Bar">🍸</button>
-                            <button onClick={() => setCurrentView('vip')} className="hover:text-yellow-500 transition text-xl" title="VIP">💎</button>
-                        </motion.div>
-                    )}
-                    
-                    {/* Empire Footer */}
-                    <footer className="bg-black border-t border-yellow-500/20 py-12 px-6">
+
+                    {/* Footer */}
+                    <footer className="bg-black border-t border-white/10 py-12 px-6">
                         <div className="max-w-4xl mx-auto text-center">
                             <div className="text-6xl mb-4">👑</div>
-                            <h3 className="font-serif text-3xl font-bold mb-2 bg-gradient-to-r from-yellow-200 to-yellow-500 bg-clip-text text-transparent">
-                                BaristaBot Pro
-                            </h3>
-                            <p className="font-elegant text-xl text-gray-400 mb-2">Empire State Edition</p>
+                            <h3 className="font-serif text-3xl font-bold mb-2 text-yellow-400">BaristaBot Pro</h3>
+                            <p className="text-xl text-gray-400 mb-2">Empire State Edition</p>
                             <p className="text-sm text-gray-600 mb-6">By Dennis Kathurima • Nairobi → Global</p>
-                            
-                            <div className="flex justify-center gap-6 text-sm text-gray-500 mb-8">
+                            <div className="flex justify-center gap-6 text-sm text-gray-500">
                                 <span>☕ Specialty Coffee</span>
-                                <span>•</span>
                                 <span>🍽️ Fine Dining</span>
-                                <span>•</span>
                                 <span>💎 VIP Experience</span>
-                                <span>•</span>
                                 <span>🪙 Web3 Ready</span>
                             </div>
-                            
-                            <div className="flex justify-center gap-4">
-                                <a href="#" className="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center hover:bg-yellow-500/20 transition">
-                                    <span>📧</span>
-                                </a>
-                                <a href="#" className="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center hover:bg-yellow-500/20 transition">
-                                    <span>🐦</span>
-                                </a>
-                                <a href="#" className="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center hover:bg-yellow-500/20 transition">
-                                    <span>💼</span>
-                                </a>
-                                <a href="#" className="w-10 h-10 rounded-full bg-yellow-500/10 flex items-center justify-center hover:bg-yellow-500/20 transition">
-                                    <span>📸</span>
-                                </a>
-                            </div>
-                            
                             <p className="text-xs text-gray-700 mt-8">
-                                © 2024 Dennis Kathurima. All rights reserved. <br/>
-                                Built with React, Tailwind, Framer Motion & J. Cole on repeat.
+                                © 2024 Dennis Kathurima. Built with React & J. Cole on repeat.
                             </p>
                         </div>
                     </footer>
                 </div>
             );
-        };
-        
-        // Mount the Empire
+        }
+
+        // Mount App
         const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<BaristaBotEmpire />);
+        root.render(<App />);
     </script>
 </body>
 </html>
