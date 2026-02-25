@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BaristaBot Pro | Dennis Kathurima — Empire State Edition</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://unpkg.com/framer-motion@10.16.4/dist/framer-motion.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --empire-gold: #D4AF37;
+            --empire-black: #0a0a0a;
+            --empire-cream: #F5F5DC;
+            --empire-burgundy: #800020;
+            --nairobi-green: #00A650;
+            --cole-world: #1a1a2e;
+        }
+        
+        * { font-family: 'Inter', sans-serif; }
+        
+        .font-serif { font-family: 'Playfair Display', serif; }
+        .font-elegant { font-family: 'Cormorant Garamond', serif; }
+        
+        @keyframes empireGlow {
+            0%, 100% { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(212, 175, 55, 0.6); }
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -1000px 0; }
+            100% { background-position: 1000px 0; }
+        }
+        
+        .empire-glow { animation: empireGlow 3s ease-in-out infinite; }
+        .float-animation { animation: float 4s ease-in-out infinite; }
+        
+        .shimmer-text {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            background-size: 1000px 100%;
+            animation: shimmer 3s infinite;
+        }
+        
+        .glass-empire {
+            background: rgba(10, 10, 10, 0.85);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        
+        .glass-gold {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+        
+        .vip-bronze { background: linear-gradient(135deg, #cd7f32, #8b4513); }
+        .vip-silver { background: linear-gradient(135deg, #c0c0c0, #808080); }
+        .vip-gold { background: linear-gradient(135deg, #ffd700, #d4af37); }
+        .vip-platinum { background: linear-gradient(135deg, #e5e4e2, #a0b2c6); }
+        .vip-diamond { background: linear-gradient(135deg, #b9f2ff, #00ced1); }
+        
+        .cole-gradient {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+        
+        .table-available { border-color: #00A650; background: rgba(0, 166, 80, 0.1); }
+        .table-occupied { border-color: #dc2626; background: rgba(220, 38, 38, 0.1); }
+        .table-reserved { border-color: #f59e0b; background: rgba(245, 158, 11, 0.1); }
+        
+        .nft-card {
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        .nft-card:hover { transform: rotateY(180deg); }
+        .nft-front, .nft-back {
+            backface-visibility: hidden;
+            position: absolute;
+            inset: 0;
+        }
+        .nft-back { transform: rotateY(180deg); }
+        
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: var(--empire-gold); border-radius: 3px; }
+        
+        .empire-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+    </style>
+</head>
+<body class="bg-black text-white overflow-x-hidden">
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback, useMemo } = React;
+        const { motion, AnimatePresence } = window.Motion;
+        
+        const STAFF_HIERARCHY = {
+            executive: [
+                { id: 'dennis', name: 'Dennis Kathurima', role: 'General Manager & Founder', avatar: '👑', tier: 'founder', specialty: 'Vision & Excellence' }
+            ],
+            management: [
+                { id: 'sophia', name: 'Sophia Chen', role: 'Executive Chef', avatar: '👩‍🍳', tier: 'platinum', specialty: 'Fusion Cuisine' },
+                { id: 'marcus', name: 'Marcus Johnson', role: 'Head Sommelier', avatar: '🍷', tier: 'gold', specialty: 'Wine & Spirits' }
+            ],
+            baristas: [
+                { id: 'ian', name: 'Ian Ochieng', role: 'Lead Barista', avatar: '☕', tier: 'gold', specialty: 'Latte Art Champion' },
+                { id: 'dan', name: 'Dan Mwangi', role: 'Barista', avatar: '🎨', tier: 'silver', specialty: 'Cold Brew Master' },
+                { id: 'zara', name: 'Zara Hassan', role: 'Barista', avatar: '🌟', tier: 'silver', specialty: 'Signature Drinks' }
+            ],
+            service: [
+                { id: 'james', name: 'James Kiptoo', role: 'Maître D', avatar: '🎩', tier: 'gold', specialty: 'VIP Service' },
+                { id: 'amina', name: 'Amina Diallo', role: 'Server', avatar: '🍽️', tier: 'bronze', specialty: 'French Service' }
+            ]
+        };
+        
+        const VIP_PROGRAM = {
+            tiers: [
+                { name: 'Bronze', minSpend: 0, discount: 0.05, perks: ['Free WiFi', 'Birthday Coffee'] },
+                { name: 'Silver', minSpend: 5000, discount: 0.10, perks: ['Priority Seating', '10% Off', 'Free Refills'] },
+                { name: 'Gold', minSpend: 15000, discount: 0.15, perks: ['Reserved Parking', '15% Off', 'Exclusive Events'] },
+                { name: 'Platinum', minSpend: 50000, discount: 0.20, perks: ['Personal Concierge', '20% Off', 'Kitchen Tours'] },
+                { name: 'Diamond', minSpend: 100000, discount: 0.25, perks: ['Private Dining', '25% Off', 'Chef\'s Table', 'NFT Membership'] }
+            ]
+        };
+        
+        const EMPIRE_MENU = {
+            coffee: {
+                signature: [
+                    { id: 'empire-espresso', name: 'The Empire Espresso', price: 450, description: 'Triple shot, gold leaf, edible flowers', origin: 'Kenya AA', prepTime: 4, image: '👑' },
+                    { id: 'cole-latte', name: 'Cole World Latte', price: 650, description: 'Caramel, sea salt, J. Cole quote art', origin: 'Ethiopia', prepTime: 6, image: '🎵' },
+                    { id: 'nairobi-cold', name: 'Nairobi Nights Cold Brew', price: 550, description: '24hr brew, nitrogen-charged, smoked', origin: 'Brazil', prepTime: 2, image: '🌃' }
+                ],
+                classics: [
+                    { id: 'cappuccino', name: 'Cappuccino', price: 400, description: 'Traditional Italian', prepTime: 4 },
+                    { id: 'flat-white', name: 'Flat White', price: 450, description: 'Australian style', prepTime: 4 },
+                    { id: 'pour-over', name: 'Pour Over V60', price: 500, description: 'Single origin, hand-crafted', prepTime: 8 }
+                ]
+            },
+            dining: {
+                breakfast: [
+                    { id: 'full-kenyan', name: 'The Full Kenyan', price: 1200, description: 'Eggs, nyama choma, ugali, kachumbari', prepTime: 15, image: '🍳' },
+                    { id: 'truffle-eggs', name: 'Truffle Scrambled Eggs', price: 1800, description: 'Black truffle, caviar, sourdough', prepTime: 12, image: '🥚' },
+                    { id: 'pancakes', name: 'Empire Stack Pancakes', price: 950, description: 'Maple, berries, gold dust', prepTime: 10, image: '🥞' }
+                ],
+                lunch: [
+                    { id: 'wagyu-burger', name: 'Wagyu Beef Burger', price: 2200, description: 'A5 wagyu, brioche, truffle fries', prepTime: 18, image: '🍔' },
+                    { id: 'lobster-roll', name: 'Maine Lobster Roll', price: 2800, description: 'Butter-poached, New England style', prepTime: 15, image: '🦞' },
+                    { id: 'vegan-bowl', name: 'Wellness Bowl', price: 1200, description: 'Quinoa, avocado, tahini, superfoods', prepTime: 10, image: '🥗' }
+                ],
+                dinner: [
+                    { id: 'ribeye', name: 'Dry-Aged Ribeye', price: 4500, description: '45-day aged, bone marrow, red wine', prepTime: 25, image: '🥩' },
+                    { id: 'sea-bass', name: 'Chilean Sea Bass', price: 3800, description: 'Miso glaze, bok choy, ginger', prepTime: 22, image: '🐟' },
+                    { id: 'pasta', name: 'Lobster Linguine', price: 3200, description: 'Maine lobster, cognac cream', prepTime: 20, image: '🍝' }
+                ],
+                desserts: [
+                    { id: 'souffle', name: 'Grand Marnier Soufflé', price: 1200, description: 'Made to order, 20min wait', prepTime: 20, image: '🍮' },
+                    { id: 'tiramisu', name: 'Tiramisu Classico', price: 850, description: 'Mascarpone, espresso, cocoa', prepTime: 5, image: '🍰' },
+                    { id: 'cheesecake', name: 'New York Cheesecake', price: 950, description: 'Strawberry compote, graham crust', prepTime: 5, image: '🗽' }
+                ]
+            },
+            bar: {
+                cocktails: [
+                    { id: 'empire-old', name: 'The Empire Old Fashioned', price: 1200, description: 'Bourbon, gold syrup, angostura', prepTime: 5, image: '🥃' },
+                    { id: 'nairobi-mule', name: 'Nairobi Mule', price: 950, description: 'Vodka, ginger beer, lime, copper mug', prepTime: 3, image: '🍹' },
+                    { id: 'cole-margarita', name: 'Cole World Margarita', price: 1100, description: 'Mezcal, jalapeño, smoked salt', prepTime: 4, image: '🍸' }
+                ],
+                wine: [
+                    { id: 'dom-perignon', name: 'Dom Pérignon 2012', price: 45000, description: 'Champagne, France', image: '🍾' },
+                    { id: 'opus-one', name: 'Opus One 2018', price: 28000, description: 'Napa Valley Cabernet', image: '🍷' },
+                    { id: 'house-red', name: 'House Red', price: 800, description: 'Kenyan Cabernet Sauvignon', image: '🍷' }
+                ]
+            }
+        };
+        
+        const TABLES = Array.from({ length: 20 }, (_, i) => ({
+            id: i + 1,
+            number: `T${String(i + 1).padStart(2, '0')}`,
+            capacity: i < 8 ? 2 : i < 14 ? 4 : i < 18 ? 6 : 8,
+            status: Math.random() > 0.7 ? 'occupied' : Math.random() > 0.5 ? 'reserved' : 'available',
+            zone: i < 6 ? 'Window' : i < 12 ? 'Main' : i < 16 ? 'Garden' : 'VIP Lounge',
+            qrCode: `https://baristabot.pro/table/${i + 1}`
+        }));
+        
+        const COLE_QUOTES = [
+            "No such thing as a life that's better than yours",
+            "Love yours",
+            "The real is back, the ville is back",
+            "Can't cry over spilled milk, gotta cry over steak",
+            "I'm a king, you a pawn, that's the difference"
+          // ==========================================
+        // EMPIRE STATE APP COMPONENT
+        // ==========================================
+        
+        const BaristaBotEmpire = () => {
+            // Core Navigation
+            const [currentView, setCurrentView] = useState('landing');
+            
+            // User State
+            const [user, setUser] = useState({
+                name: '',
+                phone: '',
+                vipTier: 'Bronze',
+                totalSpent: 0,
+                baristaTokens: 0,
+                nftMembership: null,
+                reservations: []
+            });
+            
+            // Order State
+            const [cart, setCart] = useState([]);
+            const [currentOrder, setCurrentOrder] = useState(null);
+            const [orders, setOrders] = useState([
+                {
+                    id: 'EMP-001',
+                    customer: 'Dennis K.',
+                    table: 'T05',
+                    items: [
+                        { name: 'The Empire Espresso', quantity: 1, price: 450 },
+                        { name: 'The Full Kenyan', quantity: 1, price: 1200 }
+                    ],
+                    subtotal: 1650,
+                    discount: 82.5,
+                    serviceCharge: 165,
+                    total: 1732.5,
+                    reward: 86,
+                    status: 'ready',
+                    timestamp: new Date(Date.now() - 300000).toISOString(),
+                    paymentMethod: 'mpesa'
+                }
+            ]);
+            
+            // Table State
+            const [selectedTable, setSelectedTable] = useState(null);
+            const [reservationTime, setReservationTime] = useState('');
+            
+            // UI State
+            const [notifications, setNotifications] = useState([]);
+            const [showPayment, setShowPayment] = useState(false);
+            const [paymentMethod, setPaymentMethod] = useState('mpesa');
+            const [cryptoReward, setCryptoReward] = useState(null);
+            
+            // Random Cole Quote
+            const [coleQuote, setColeQuote] = useState(COLE_QUOTES[0]);
+            
+            useEffect(() => {
+                const interval = setInterval(() => {
+                    setColeQuote(COLE_QUOTES[Math.floor(Math.random() * COLE_QUOTES.length)]);
+                }, 10000);
+                return () => clearInterval(interval);
+            }, []);
+            
+            // Notification System
+            const notify = (message, type = 'info') => {
+                const id = Date.now();
+                setNotifications(prev => [...prev, { id, message, type }]);
+                setTimeout(() => setNotifications(prev => prev.filter(n => n.id !== id)), 4000);
+            };
+            
+            // Calculate VIP Tier
+            const calculateTier = (spent) => {
+                for (let i = VIP_PROGRAM.tiers.length - 1; i >= 0; i--) {
+                    if (spent >= VIP_PROGRAM.tiers[i].minSpend) {
+                        return VIP_PROGRAM.tiers[i].name;
+                    }
+                }
+                return 'Bronze';
+            };
+            
+            // Add to Cart
+            const addToCart = (item, category) => {
+                setCart(prev => {
+                    const existing = prev.find(i => i.id === item.id);
+                    if (existing) {
+                        return prev.map(i => i.id === item.id ? {...i, quantity: i.quantity + 1} : i);
+                    }
+                    return [...prev, {...item, quantity: 1, category}];
+                });
+                notify(`Added ${item.name}`, 'success');
+            };
+            
+            // Calculate Totals
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const discount = subtotal * (VIP_PROGRAM.tiers.find(t => t.name === user.vipTier)?.discount || 0);
+            const serviceCharge = subtotal * 0.10;
+            const total = subtotal - discount + serviceCharge;
+            
+            // Crypto Reward Calculation
+            const calculateReward = (amount) => {
+                const baseReward = amount * 0.05;
+                const tierMultiplier = {
+                    'Bronze': 1, 'Silver': 1.5, 'Gold': 2, 'Platinum': 3, 'Diamond': 5
+                }[user.vipTier] || 1;
+                
+                return Math.floor(baseReward * tierMultiplier);
+            };
+            
+            // Submit Order
+            const submitOrder = async () => {
+                if (!user.name || cart.length === 0) {
+                    notify('Please enter your name and add items', 'error');
+                    return;
+                }
+                
+                const reward = calculateReward(total);
+                setCryptoReward(reward);
+                
+                const newOrder = {
+                    id: `EMP-${Date.now()}`,
+                    customer: user.name,
+                    table: selectedTable?.number || 'Takeaway',
+                    items: cart,
+                    subtotal,
+                    discount,
+                    serviceCharge,
+                    total,
+                    reward,
+                    status: 'confirmed',
+                    timestamp: new Date().toISOString(),
+                    paymentMethod
+                };
+                
+                setOrders(prev => [newOrder, ...prev]);
+                setCurrentOrder(newOrder);
+                
+                setUser(prev => ({
+                    ...prev,
+                    totalSpent: prev.totalSpent + total,
+                    baristaTokens: prev.baristaTokens + reward,
+                    vipTier: calculateTier(prev.totalSpent + total)
+                }));
+                
+                setCart([]);
+                setShowPayment(false);
+                notify(`Order confirmed! +${reward} $BARISTA tokens earned!`, 'success');
+            };
+            
+            // Components
+            const LandingPage = () => (
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="min-h-screen relative overflow-hidden"
+                >
+                    <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900 to-black">
+                        <div className="absolute inset-0 opacity-20" style={{
+                            backgroundImage: 'radial-gradient(circle at 50% 50%, rgba(212,175,55,0.3) 0%, transparent 50%)'
+                        }}></div>
+                    </div>
+                    
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 opacity-10">
+                        <div className="text-[40rem] leading-none">🏢</div>
+                    </div>
+                    
+                    <div className="relative z-10 min-h-screen flex flex-col items-center justify-center px-6">
+                        <motion.div
+                            initial={{ y: 50, opacity: 0 }}
+                            animate={{ y: 0, opacity: 1 }}
+                            transition={{ delay: 0.2 }}
+                            className="text-center"
+                        >
+                            <div className="text-8xl mb-6 float-animation">👑</div>
+                            <h1 className="font-serif text-6xl md:text-8xl font-bold mb-4 bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200 bg-clip-text text-transparent shimmer-text">
+                                BaristaBot Pro
+                            </h1>
+                            <p className="font-elegant text-2xl md:text-3xl text-gray-400 mb-2">Empire State Edition</p>
+                            <p className="text-sm text-gray-500 tracking-[0.3em] uppercase mb-12">By Dennis Kathurima</p>
+                            
+                            <motion.div 
+                                key={coleQuote}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="mb-12"
+                            >
+                                <p className="font-elegant text-xl text-yellow-600 italic">"{coleQuote}"</p>
+                                <p className="text-xs text-gray-600 mt-2">— J. Cole</p>
+                            </motion.div>
+                            
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                                {[
+                                    { id: 'dine', icon: '🍽️', title: 'Dine', desc: 'Full Experience' },
+                                    { id: 'coffee', icon: '☕', title: 'Coffee', desc: 'Specialty Bar' },
+                                    { id: 'bar', icon: '🍸', title: 'Bar', desc: 'Cocktails & Wine' },
+                                    { id: 'vip', icon: '💎', title: 'VIP', desc: 'Membership' }
+                                ].map((item, idx) => (
+                                    <motion.button
+                                        key={item.id}
+                                        initial={{ scale: 0.8, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        transition={{ delay: 0.4 + idx * 0.1 }}
+                                        whileHover={{ scale: 1.05, y: -5 }}
+                                        onClick={() => setCurrentView(item.id)}
+                                        className="glass-gold p-6 rounded-2xl text-center group hover:shadow-2xl transition-all"
+                                    >
+                                        <div className="text-4xl mb-3 group-hover:scale-110 transition-transform">{item.icon}</div>
+                                        <h3 className="font-bold text-lg">{item.title}</h3>
+                                        <p className="text-xs text-gray-400">{item.desc}</p>
+                                    </motion.button>
+                                ))}
+                            </div>
+                            
+                            <motion.button
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 1 }}
+                                onClick={() => setCurrentView('kitchen')}
+                                className="mt-8 text-gray-500 hover:text-white text-sm flex items-center gap-2 mx-auto"
+                            >
+                                <span>👨‍🍳</span> Staff Access
+                            </motion.button>
+                        </motion.div>
+                    </div>
+                </motion.div>
+            );
+            
+            const DineView = () => (
+                <div className="min-h-screen bg-gradient-to-b from-gray-900 to-black">
+                    <div className="sticky top-0 z-40 glass-empire p-4">
+                        <div className="max-w-7xl mx-auto flex justify-between items-center">
+                            <button onClick={() => setCurrentView('landing')} className="text-2xl">←</button>
+                            <h2 className="font-serif text-2xl">🍽️ The Dining Room</h2>
+                            <div className="flex items-center gap-4">
+                                <span className={`px-3 py-1 rounded-full text-xs vip-${user.vipTier.toLowerCase()}`}>
+                                    {user.vipTier}
+                                </span>
+                                <span className="text-yellow-500 text-sm">{user.baristaTokens} $BARISTA</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <div className="lg:col-span-2 space-y-8">
+                            <div className="glass-gold rounded-2xl p-6">
+                                <h3 className="font-serif text-xl mb-4">Select Your Table</h3>
+                                <div className="grid grid-cols-4 md:grid-cols-5 gap-3">
+                                    {TABLES.map(table => (
+                                        <motion.button
+                                            key={table.id}
+                                            whileHover={{ scale: 1.05 }}
+                                            whileTap={{ scale: 0.95 }}
+                                            onClick={() => table.status === 'available' && setSelectedTable(table)}
+                                            className={`p-3 rounded-xl border-2 text-center transition-all ${
+                                                selectedTable?.id === table.id 
+                                                    ? 'border-yellow-500 bg-yellow-500/20' 
+                                                    : table.status === 'available'
+                                                        ? 'border-green-500/50 hover:border-green-500 table-available'
+                                                        : table.status === 'occupied'
+                                                            ? 'border-red-500/50 table-occupied opacity-50'
+                                                            : 'border-yellow-500/50 table-reserved opacity-50'
+                                            }`}
+                                        >
+                                            <div className="text-lg">{table.number}</div>
+                                            <div className="text-[10px] text-gray-400">{table.zone}</div>
+                                            <div className="text-[10px]">{table.capacity}ppl</div>
+                                        </motion.button>
+                                    ))}
+                                </div>
+                                {selectedTable && (
+                                    <div className="mt-4 p-4 bg-green-500/10 rounded-xl flex justify-between items-center">
+                                        <div>
+                                            <p className="font-bold">Table {selectedTable.number} Selected</p>
+                                            <p className="text-sm text-gray-400">{selectedTable.zone} • Seats {selectedTable.capacity}</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <img 
+                                                src={`https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${selectedTable.qrCode}`}
+                                                alt="Table QR"
+                                                className="w-16 h-16 rounded-lg"
+                                            />
+                                            <p className="text-[10px] text-gray-500 mt-1">Scan to order</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                            
+                            {Object.entries(EMPIRE_MENU.dining).map(([category, items]) => (
+                                <div key={category} className="space-y-4">
+                                    <h3 className="font-serif text-2xl capitalize text-yellow-500">{category}</h3>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {items.map(item => (
+                                            <motion.div
+                                                key={item.id}
+                                                whileHover={{ scale: 1.02 }}
+                                                className="glass-gold rounded-xl p-4 flex gap-4 cursor-pointer"
+                                                onClick={() => addToCart(item, category)}
+                                            >
+                                                <div className="text-4xl">{item.image}</div>
+                                                <div className="flex-1">
+                                                    <div className="flex justify-between items-start">
+                                                        <h4 className="font-bold">{item.name}</h4>
+                                                        <span className="text-yellow-500 font-bold">KES {item.price.toLocaleString()}</span>
+                                                    </div>
+                                                    <p className="text-sm text-gray-400 mt-1">{item.description}</p>
+                                                    <div className="flex justify-between items-center mt-2">
+                                                        <span className="text-xs text-gray-500">⏱️ {item.prepTime} mins</span>
+                                                        <button className="text-xs bg-yellow-500/20 text-yellow-500 px-3 py-1 rounded-full hover:bg-yellow-500 hover:text-black transition">
+                                                            Add to Order
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </motion.div>
+                                        ))}
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        
+                        <div className="lg:col-span-1">
+                            <div className="sticky top-24 glass-gold rounded-2xl p-6">
+                                <h3 className="font-serif text-xl mb-4">Your Experience</h3>
+                                
+                                <div className="space-y-3 mb-6">
+                                    <input
+                                        type="text"
+                                        placeholder="Your Name"
+                                        className="w-full p-3 bg-black/50 border border-yellow-500/30 rounded-xl text-white"
+                                        value={user.name}
+                                        onChange={(e) => setUser({...user, name: e.target.value})}
+                                    />
+                                    <input
+                                        type="tel"
+                                        placeholder="Phone Number"
+                                        className="w-full p-3 bg-black/50 border border-yellow-500/30 rounded-xl text-white"
+                                        value={user.phone}
+                                        onChange={(e) => setUser({...user, phone: e.target.value})}
+                                    />
+                                </div>
+                                
+                                <div className="space-y-3 mb-6 max-h-64 overflow-y-auto">
+                                    {cart.length === 0 ? (
+                                        <div className="text-center text-gray-500 py-8">
+                                            <div className="text-4xl mb-2">🍽️</div>
+                                            <p>Your experience awaits</p>
+                                        </div>
+                                    ) : (
+                                        cart.map(item => (
+                                            <div key={item.id} className="flex items-center gap-3 bg-black/30 p-3 rounded-xl">
+                                                <span className="text-2xl">{item.image || '•'}</span>
+                                                <div className="flex-1">
+                                                    <div className="text-sm font-bold">{item.name}</div>
+                                                    <div className="text-xs text-yellow-500">KES {(item.price * item.quantity).toLocaleString()}</div>
+                                                </div>
+                                                <div className="flex items-center gap-2">
+                                                    <button 
+                                                        onClick={() => setCart(prev => prev.map(i => i.id === item.id ? {...i, quantity: Math.max(0, i.quantity - 1)} : i).filter(i => i.quantity > 0))}
+                                                        className="w-6 h-6 rounded-full bg-gray-700 hover:bg-gray-600 flex items-center justify-center"
+                                                    >-</button>
+                                                    <span className="w-6 text-center">{item.quantity}</span>
+                                                    <button 
+                                                        onClick={() => setCart(prev => prev.map(i => i.id === item.id ? {...i, quantity: i.quantity + 1} : i))}
+                                                        className="w-6 h-6 rounded-full bg-yellow-500 text-black hover:bg-yellow-400 flex items-center justify-center"
+                                                    >+</button>
+                                                </div>
+                                            </div>
+                                        ))
+                                    )}
+                                </div>
+                                
+                                {cart.length > 0 && (
+                                    <div className="space-y-2 mb-6 pb-6 border-b border-yellow-500/30">
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-gray-400">Subtotal</span>
+                                            <span>KES {subtotal.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm text-green-400">
+                                            <span>VIP Discount ({user.vipTier})</span>
+                                            <span>-KES {discount.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm">
+                                            <span className="text-gray-400">Service Charge (10%)</span>
+                                            <span>KES {serviceCharge.toLocaleString()}</span>
+                                        </div>
+                                        <div className="flex justify-between text-xl font-bold text-yellow-500 pt-2">
+                                            <span>Total</span>
+                                            <span>KES {total.toLocaleString()}</span>
+                                        </div>
+                                        <div className="text-xs text-purple-400 flex items-center gap-1">
+                                            <span>🪙</span>
+                                            <span>You'll earn {calculateReward(total)} $BARISTA tokens</span>
+                                        </div>
+                                    </div>
+                                )}
+                                
+                                <div className="space-y-2 mb-6">
+                                    <p className="text-xs text-gray-400 mb-2">Payment Method</p>
+                                    {[
+                                        { id: 'mpesa', name: 'M-Pesa', icon: 'M', color: 'bg-green-600' },
+                                        { id: 'card', name: 'Card/Apple Pay', icon: '💳', color: 'bg-blue-600' },
+                                        { id: 'crypto', name: 'Crypto (5% off)', icon: '₿', color: 'bg-orange-600' },
+                                        { id: 'tokens', name: '$BARISTA Tokens', icon: '🪙', color: 'bg-purple-600' }
+                                    ].map(method => (
+                                        <button
+                                            key={method.id}
+                                            onClick={() => setPaymentMethod(method.id)}
+                                            className={`w-full p-3 rounded-xl flex items-center gap-3 transition-all ${
+                                                paymentMethod === method.id 
+                                                    ? 'bg-yellow-500/20 border border-yellow-500' 
+                                                    : 'bg-black/30 border border-transparent hover:bg-black/50'
+                                            }`}
+                                        >
+                                            <div className={`w-8 h-8 rounded-full ${method.color} flex items-center justify-center text-sm`}>
+                                                {method.icon}
+                                            </div>
+                                            <span className="text-sm">{method.name}</span>
+                                        </button>
+                                    ))}
+                                </div>
+                                
+                                <button
+                                    onClick={() => cart.length > 0 && setShowPayment(true)}
+                                    disabled={cart.length === 0 || !user.name}
+                                    className="w-full py-4 bg-gradient-to-r from-yellow-600 to-yellow-500 text-black rounded-xl font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-yellow-500/20 transition-all"
+                                >
+                                    {cart.length === 0 ? 'Add Items' : `Pay KES ${total.toLocaleString()}`}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        ];
+      
